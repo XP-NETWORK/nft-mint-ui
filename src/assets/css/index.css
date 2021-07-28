@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap');
+
+html,
+body {
+  height: 100%;
+  resize: none;
+}
+
+body {
+  background-color: #071128;
+  margin: 0;
+  color: white;
+
+  line-height: 1;
+  opacity: 1 !important;
+  overflow-x: hidden;
+
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -webkit-text-stroke: 0.025em rgba(51, 51, 51, 0.1);
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-Regular.ttf");
+}
+
+.flex-container {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.Xp-svg-logo {
+  width: 118px;
+  height: 18px;
+}
+
+.arrows-svg-switch {
+  width: 25px;
+  height: 35px;
+  margin-top: 3px;
+}
+
+.from-to-style {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.buttonExchange {
+  background: #030c21;
+  border: 1px solid #374462;
+  box-sizing: border-box;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  max-width: 35px;
+  max-height: 35px;
+}
+
+.buttonExchange:focus-visible{
+  outline: none;
+}
+
+.swap-button-absolute {
+  position: absolute;
+  left: 47.5%;
+  top: 41%;
+}
+
+@media (max-width: 1300px) {
+  .swap-button-absolute {
+    left: 47.5%;
+    top: 39%;
+  }
+
+  .arrows-svg-switch {
+    width: 24px;
+    height: 24px;
+  }
+  .buttonExchange {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .from-to-style {
+    flex-direction: column;
+  }
+
+
+  .dropdown::-webkit-scrollbar {
+    width: 0px;
+  }
+  
+  /* Track */
+  .dropdown::-webkit-scrollbar-track {
+    visibility: hidden;
+
+  }
+   
+  /* Handle */
+  .dropdown::-webkit-scrollbar-thumb {
+    visibility: hidden;
+ 
+  }
+  
+  /* Handle on hover */
+  .dropdown::-webkit-scrollbar-thumb:hover {
+    visibility: hidden;
+  }
+
+
+  .swap-button-absolute {
+    transform: rotate(90deg);
+  }
+
+  body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: #030c21;
+  }
+
+  .swap-button-absolute {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    margin-inline-end: auto;
+    margin-bottom: -15px;
+    margin-left: -15px;
+  }
+
+  #root {
+    width: 100%;
+  }
+
+  .arrows-svg-switch {
+    width: 37px;
+    height: 37px;
+    margin-inline-start: 0px;
+  }
+  .flex-container {
+    margin-top: 100px;
+    margin-bottom: 100px;
+  }
+
+  .buttonExchange {
+    width: 45px;
+    height: 45px;
+  }
+}
