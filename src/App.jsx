@@ -46,19 +46,6 @@ function App() {
   // Link to the resource
   const [uri, setUri] = useState('');
 
-
-  /**
-   * Handles the Ledger onChange event
-   * 
-   * Mutates the ledger value in the state
-   * @param {Object} o - {value:'ledger link', label:'Ledger Name'}
-   */
-  const handleChangeLedger = (o) => {
-    const val = o.label;
-    setLedger(val);
-    console.log(ledger)
-  }
-
  
 
   // ==================================================
@@ -177,8 +164,22 @@ function App() {
       }
     }
 
+    /**
+   * Handles the Ledger onChange event
+   * 
+   * Mutates the ledger value in the state
+   * @param {Object} o - {value:'ledger link', label:'Ledger Name'}
+   */
+  const handleChangeLedger = (o) => {
+    const val = o.label;
+    setLedger(val);
+    console.log(ledger)
+  }
 
 
+  // ==================================================
+  //                      J S X
+  // ==================================================
 
   return (
     <div className="App">
