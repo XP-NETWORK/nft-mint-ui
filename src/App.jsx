@@ -6,6 +6,8 @@ import { Ledgers } from './assets/data/ledgers';
 
 import PlokadotMintNftView from './components/PolkadotMintNftView';
 import ElrondMintNftView from './components/ElrondMintNftView';
+import { UnsignedPreset } from './config';
+import { ChainHandlers, post } from './@utils/helper_functions';
 
 /**
  * 
@@ -56,15 +58,30 @@ function App() {
     if (files) {
       setBlob(files)
     }
-
   }
 
-  const handleClickCreate = () => {
+  const uploadImage = async () => {
+    const formdat = new FormData();
+    formdat.append("file", blob);
+    formdat.append("upload_preset", UnsignedPreset)
+    const res = await post("https://api.cloudinary.com/v1_1/xp-network/image/upload", formdat);
+    return res[0].url;
+  };
 
+  const handleClickCreate = async () => {
+
+    const url = await uploadImage();
+  
     switch(ledger){
-      case Ledgers[0].label:
-        console.log(ledger, name, description, royalties, copies, uri, blob)
+      case Ledgers[0].label: {
+        const polka = await ChainHandlers.polka();
+        const signer = await ChainHandlers.polkadotSigner(polkaAddress);
+        const encoder = new TextEncoder();
+        console.log(encoder.encode(url));
+    
+        await polka.mintNft(signer, encoder.encode(url));
         break;
+      }
       case Ledgers[1].label:
         console.log(ledger, name, description, royalties, copies, uri, blob)
         break;

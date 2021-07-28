@@ -33,7 +33,7 @@ const img = {
   height: '100%'
 };
 
-const getArrayBuffer = (file) => {
+const getBase64 = (file) => {
   return new Promise(function (resolve, reject) {
       var reader = new FileReader();
 
@@ -43,21 +43,21 @@ const getArrayBuffer = (file) => {
       reader.onerror = function (e) {
           reject(e.target.error);
       };
-      reader.readAsArrayBuffer(file);
+      reader.readAsDataURL(file);
   });
 }
 
 
 function XPDropzone(props) {
   const [files, setFiles] = useState([]);
-  const [blob, setBlob] = useState(0);
+  const [blob, setBlob] = useState(undefined);
   const {getRootProps, getInputProps} = useDropzone({
     accept: 'image/*',
     onDrop: acceptedFiles => {
       setFiles(acceptedFiles.map(file => Object.assign(file, {
         preview: URL.createObjectURL(file)
       })));
-      getArrayBuffer(acceptedFiles[0]).then(data => {
+      getBase64(acceptedFiles[0]).then(data => {
         console.log(data);
         setBlob(data);
       })
