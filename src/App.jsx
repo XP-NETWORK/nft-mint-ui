@@ -1,5 +1,5 @@
 import * as Elrond from "@elrondnetwork/dapp";
-import { ElrondDappConfig, walletConnectBridge, walletConnectDeepLink } from "./Config";
+import { ElrondDappConfig, walletConnectBridge, walletConnectDeepLink } from "./config";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { routes } from "./routes"
 import { ContextProvider } from "./context";

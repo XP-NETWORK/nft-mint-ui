@@ -2,7 +2,7 @@ import { TransactionHash } from '@elrondnetwork/erdjs';
 import React, { useState, useRef } from 'react';
 import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { ChainHandlers } from './helper_functions';
+import { ChainHandlers } from '../@utils/helper_functions';
 
 function ElrondTxnHandler() {
     const history = useRef(useHistory());

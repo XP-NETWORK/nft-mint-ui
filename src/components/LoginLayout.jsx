@@ -1,6 +1,6 @@
 import React from "react";
 import * as Dapp from "@elrondnetwork/dapp";
-import { routes } from "./router";
+import { routes } from "../routes";
 
 const Layout = ({ children }) => {
   return (
