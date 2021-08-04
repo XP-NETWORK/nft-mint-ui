@@ -30,14 +30,18 @@ function MinterView() {
 
   const [ledger, setLedger] = useState(Ledgers[0].label);
 
+
+  // POLKADOT STATE
+  const [polkaAddress, setPolkaAddress] = useState('');
+
   // Common image blob storage
   const [blob, setBlob] = useState('');
 
+
+  // ELROND STATE
+  // ESDT token storage
   // address
   const [address, setAddress] = useState('');
-
-  // ELROND
-  // ESDT token storage
   const [esdt, setEsdt] = useState('');
   // The name of the NFT
   const [name, setName] = useState('');
@@ -57,7 +61,7 @@ function MinterView() {
   const [esdtName, setEsdtName] = useState('')
   const [esdtCollection, setEsdtCollection] = useState('')
 
- 
+
 
   // ==================================================
   //                COMMON HANDLERS
@@ -80,14 +84,14 @@ function MinterView() {
   const handleClickCreate = async () => {
 
     const url = await uploadImage();
-  
-    switch(ledger){
+
+    switch (ledger) {
       case Ledgers[0].label: {
         const polka = await ChainHandlers.polka();
-        const signer = await ChainHandlers.polkadotSigner(address);
+        const signer = await ChainHandlers.polkadotSigner(polkaAddress);
         const encoder = new TextEncoder();
         console.log(encoder.encode(url));
-    
+
         await polka.mintNft(signer, encoder.encode(url));
         break;
       }
@@ -101,7 +105,7 @@ function MinterView() {
           attrs: description.toString(),
           uris: [url]
         });
-        
+
         sendElrdTx({
           transaction: txu,
           callbackRoute: "/processelrd"
@@ -114,14 +118,23 @@ function MinterView() {
 
   }
 
-  const handleAccountChange = (e) => {
+
+  const handlePolkaAccountChange = (e) => {
     const val = e.target.value;
-    setAddress(val);
+    val
+      ? setPolkaAddress(val)
+      : setPolkaAddress('')
   }
 
   // ==================================================
   //                ELROND HANDLERS
   // ==================================================
+
+
+  const handleAccountChange = (e) => {
+    const val = e.target.value;
+    setAddress(val);
+  }
 
   const handleChangeESDT = (e) => {
     const val = e.target.value;
@@ -130,32 +143,32 @@ function MinterView() {
   }
 
 
-   /**
-   * Handles the Description onChange event
-   * 
-   * Mutates the description value in the state
-   * @param {Event} e the pointer to the event emitter
-   */
-    const handleChangeDescription = (e) => {
-      const val = e.target.value;
-      if (val.length < 141) {
-        setDescription(val)
-  
-        const width = windowSise.width <= 600 ? windowSise.width : 600;
-  
-        if ((width - 40) < val.length * 6.6) {
-          setDescrRows(Math.ceil((val.length * 6.6) / (width - 40)))
-        }
+  /**
+  * Handles the Description onChange event
+  * 
+  * Mutates the description value in the state
+  * @param {Event} e the pointer to the event emitter
+  */
+  const handleChangeDescription = (e) => {
+    const val = e.target.value;
+    if (val.length < 141) {
+      setDescription(val)
+
+      const width = windowSise.width <= 600 ? windowSise.width : 600;
+
+      if ((width - 40) < val.length * 6.6) {
+        setDescrRows(Math.ceil((val.length * 6.6) / (width - 40)))
       }
-  
     }
 
-    /**
-   * Handles the Asset Name onChange event
-   * 
-   * Mutates the name value in the state
-   * @param {Event} e the pointer to the event emitter
-   */
+  }
+
+  /**
+ * Handles the Asset Name onChange event
+ * 
+ * Mutates the name value in the state
+ * @param {Event} e the pointer to the event emitter
+ */
   const handleChangeTitle = (e) => {
     const val = e.target.value;
     if (val) {
@@ -164,40 +177,40 @@ function MinterView() {
       setName('')
     )
   }
-  
-    /**
-      * Handles the Royalties onChange event
-      * 
-      * Mutates the royalties value in the state
-      * @param {Event} e the pointer to the event emitter
-      */
-    const handleRoyaltiesChange = (e) => {
-      let val = e.target.value;
-      val = val ? parseInt(val) : 0;
-      if (0 <= val && val < 51) {
-        setRoyalties(val)
-      }
-    }
-  
-    /**
-      * Handles the Copies onChange event
-      * 
-      * Mutates the copies value in the state
-      * @param {Event} e the pointer to the event emitter
-      */
-    const handleChangeCopies = (e) => {
-      const val = e.target.value;
-      if (1 <= val) {
-        setCopies(val)
-      }
-    }
 
-    /**
-   * Handles the Ledger onChange event
-   * 
-   * Mutates the ledger value in the state
-   * @param {Object} o - {value:'ledger link', label:'Ledger Name'}
-   */
+  /**
+    * Handles the Royalties onChange event
+    * 
+    * Mutates the royalties value in the state
+    * @param {Event} e the pointer to the event emitter
+    */
+  const handleRoyaltiesChange = (e) => {
+    let val = e.target.value;
+    val = val ? parseInt(val) : 0;
+    if (0 <= val && val < 51) {
+      setRoyalties(val)
+    }
+  }
+
+  /**
+    * Handles the Copies onChange event
+    * 
+    * Mutates the copies value in the state
+    * @param {Event} e the pointer to the event emitter
+    */
+  const handleChangeCopies = (e) => {
+    const val = e.target.value;
+    if (1 <= val) {
+      setCopies(val)
+    }
+  }
+
+  /**
+ * Handles the Ledger onChange event
+ * 
+ * Mutates the ledger value in the state
+ * @param {Object} o - {value:'ledger link', label:'Ledger Name'}
+ */
   const handleChangeLedger = (o) => {
     const val = o.label;
     setLedger(val);
@@ -208,25 +221,37 @@ function MinterView() {
   // ==================================================
 
 
+  /**
+   * Mutates the esdtName state
+   * @param {Event} e the pointer to the caller
+   */
   const onESDTNameChange = (e) => {
     const val = e.target.value;
-    val 
-    ? setEsdtName(val) 
-    : setEsdtName('')
+    val
+      ? setEsdtName(val)
+      : setEsdtName('')
   }
 
+  /**
+   * Mutates the esdtCollectionName state
+   * @param {Event} e the pointer to the caller
+   */
   const onEsdtCollectionChange = (e) => {
     const val = e.target.value;
     val
-    ? setEsdtCollection(val)
-    : setEsdtCollection('')
+      ? setEsdtCollection(val)
+      : setEsdtCollection('')
   }
 
-
+  /**
+   * Handles the ESDT form "CREATE" button click
+   * 
+   * Initiates the ESDT Minting transaction on Elrond
+   */
   const handleClickESDTMint = () => {
 
     console.log('Check - ESDT Mint Click')
-    
+
   }
 
 
@@ -251,8 +276,8 @@ function MinterView() {
             <PlokadotMintNftView
               onChange={handleChangeFiles}
               onClick={handleClickCreate}
-              value={address}
-              onAccountChange={handleAccountChange}
+              value={polkaAddress}
+              onAccountChange={handlePolkaAccountChange}
             />)
           : ledger && ledger === Ledgers[1].label
             ? (
@@ -282,18 +307,18 @@ function MinterView() {
                 onAccountChange={handleAccountChange}
               />)
             : ledger && ledger === Ledgers[2].label
-            ? <ESDTMint 
+              ? <ESDTMint
 
-            esdtName={esdtName}
-            onESDTNameChange={onESDTNameChange}
+                esdtName={esdtName}
+                onESDTNameChange={onESDTNameChange}
 
-            esdtCollection={esdtCollection}
-            onEsdtCollectionChange={onEsdtCollectionChange}
+                esdtCollection={esdtCollection}
+                onEsdtCollectionChange={onEsdtCollectionChange}
 
-            onClick={handleClickESDTMint}
-            
-            />
-            :('')
+                onClick={handleClickESDTMint}
+
+              />
+              : ('')
       }
 
 
