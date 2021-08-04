@@ -8,6 +8,8 @@ import PlokadotMintNftView from './PolkadotMintNftView';
 import ElrondMintNftView from './ElrondMintNftView';
 import { UnsignedPreset } from '../config';
 import { ChainHandlers, post } from '../@utils/helper_functions';
+import * as Elrond from "@elrondnetwork/dapp";
+import * as Erdjs from '@elrondnetwork/erdjs/out';
 
 /**
  * 
@@ -28,9 +30,8 @@ function MinterView() {
   // Common image blob storage
   const [blob, setBlob] = useState('');
 
-  // POLKADOT 
   // address
-  const [polkaAddress, setPolkaAddress] = useState('');
+  const [address, setAddress] = useState('');
 
   // ELROND
   // ESDT token storage
@@ -45,8 +46,8 @@ function MinterView() {
   const [description, setDescription] = useState('');
   // The number of rows to display the entire description
   const [descrRows, setDescrRows] = useState(1);
-  // Link to the resource
-  const [uri, setUri] = useState('');
+
+  const sendElrdTx = Elrond.useSendTransaction();
 
  
 
@@ -75,29 +76,39 @@ function MinterView() {
     switch(ledger){
       case Ledgers[0].label: {
         const polka = await ChainHandlers.polka();
-        const signer = await ChainHandlers.polkadotSigner(polkaAddress);
+        const signer = await ChainHandlers.polkadotSigner(address);
         const encoder = new TextEncoder();
         console.log(encoder.encode(url));
     
         await polka.mintNft(signer, encoder.encode(url));
         break;
       }
-      case Ledgers[1].label:
-        console.log(ledger, name, description, royalties, copies, uri, blob)
+      case Ledgers[1].label: {
+        const elrd = await ChainHandlers.elrd();
+        const txu = elrd.unsignedMintNftTxn(new Erdjs.Address(address), {
+          identifier: esdt.toString(),
+          quantity: parseInt(copies),
+          name: name.toString(),
+          royalties: parseInt(royalties),
+          attrs: description.toString(),
+          uris: [url]
+        });
+        
+        sendElrdTx({
+          transaction: txu,
+          callbackRoute: "/processelrd"
+        })
         break;
+      }
       default:
         break;
     }
 
   }
 
-  // ==================================================
-  //                POLKADOT HANDLERS
-  // ==================================================
-
-  const handlePolkadotAccountChange = (e) => {
+  const handleAccountChange = (e) => {
     const val = e.target.value;
-    setPolkaAddress(val);
+    setAddress(val);
   }
 
   // ==================================================
@@ -172,14 +183,6 @@ function MinterView() {
         setCopies(val)
       }
     }
-  
-    const handleChangeUri = (e) => {
-      const val = e.target.value;
-  
-      if (val) {
-        setUri(val)
-      }
-    }
 
     /**
    * Handles the Ledger onChange event
@@ -215,8 +218,8 @@ function MinterView() {
             <PlokadotMintNftView
               onChange={handleChangeFiles}
               onClick={handleClickCreate}
-              value={polkaAddress}
-              onAccountChange={handlePolkadotAccountChange}
+              value={address}
+              onAccountChange={handleAccountChange}
             />)
           : ledger && ledger === Ledgers[1].label
             ? (
@@ -242,8 +245,8 @@ function MinterView() {
                 copies={copies}
                 handleChangeCopies={handleChangeCopies}
 
-                uri={uri}
-                handleChangeUri={handleChangeUri}
+                address={address}
+                onAccountChange={handleAccountChange}
               />)
             : ('')
       }

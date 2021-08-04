@@ -13,6 +13,16 @@ const ElrondMintNftView = (props) => {
             <div className="group-container">
                 <div
                     className="bold-label"
+                >ESDT Manager Address</div>
+                <input
+                    value={props.address}
+                    onChange={e => props.onAccountChange(e)}
+                    placeholder="" />
+            </div>
+
+            <div className="group-container">
+                <div
+                    className="bold-label"
                 >ESDT Identifier</div>
                 <input
                     value={props.estdIdentifier}
@@ -61,17 +71,6 @@ const ElrondMintNftView = (props) => {
                         placeholder="Amount of tokens"
                     />
                 </span>
-            </div>
-
-            <div className="group-container">
-                <div
-                    className="bold-label"
-                >URI</div>
-                <input
-                    className="bold-label"
-                    value={props.uri}
-                    onChange={props.handleChangeUri}
-                    placeholder="https://link.to.nft" />
             </div>
 
             <div className="group-container">

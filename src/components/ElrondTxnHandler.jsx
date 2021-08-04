@@ -1,8 +1,6 @@
-import { TransactionHash } from '@elrondnetwork/erdjs';
 import React, { useState, useRef } from 'react';
 import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { ChainHandlers } from '../@utils/helper_functions';
 
 function ElrondTxnHandler() {
     const history = useRef(useHistory());
@@ -12,8 +10,6 @@ function ElrondTxnHandler() {
     const [txState, setTxState] = useState(status.current === "success" ? 'processing... please wait!' : 'failed to execute txn!');
 
     const execTx = async () => {
-        const elrd = await ChainHandlers.elrd();
-        await elrd.handleTxnEvent(new TransactionHash(query.current.get("txHash")));
         setTxState("Done!");
     };
 
