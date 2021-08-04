@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-function ElrondTxnHandler() {
+function ElrondTxnHandler({ redirect }) {
     const history = useRef(useHistory());
     const query = useRef(new URLSearchParams(useLocation().search));
     const status = useRef(query.current.get("status"));
@@ -17,9 +17,9 @@ function ElrondTxnHandler() {
         const cb = status.current === "success" ? execTx() : new Promise((r) => r());
         cb.then(async () => {
             await new Promise(r => setTimeout(r, 3000));
-            history.current.push("/");
+            history.current.push(redirect);
         })
-    }, [])
+    }, [redirect])
 
     return (
         <div>

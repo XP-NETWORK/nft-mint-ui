@@ -21,11 +21,11 @@ const ESDTMint = (props) => {
             <div className="group-container">
                 <div
                     className="bold-label"
-                >ESDT Collection</div>
+                >ESDT Ticker</div>
                 <input
-                    value={props.esdtCollection}
-                    onChange={e => props.onEsdtCollectionChange(e)}
-                    placeholder="Name your NFT collection" />
+                    value={props.ticker}
+                    onChange={e => props.onTickerChange(e)}
+                    placeholder="Enter your ESDT Ticker here" />
             </div>
 
             <div className="group-container">

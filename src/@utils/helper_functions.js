@@ -94,6 +94,6 @@ export const ChainHandlers = {
     
         const dat = await resp.json();
 
-        return [dat.data.tokens, undefined];
+        return [dat.data && dat.data.tokens, undefined];
     }
 }

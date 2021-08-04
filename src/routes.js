@@ -1,5 +1,6 @@
 import MintView from "./components/MinterView";
-import ElrondTxnHandler from "./components/ElrondTxnHandler"
+import ElrondTxnHandler from "./components/ElrondTxnHandler";
+import ESDTTxnHandler from "./components/ESDTTxnHandler";
 
 export const routes = [
   {
@@ -8,6 +9,10 @@ export const routes = [
   },
   {
     path: "/processelrd",
-    component: ElrondTxnHandler
+    component: () => ElrondTxnHandler({ redirect: "/" })
+  },
+  {
+    path: "/processesdt",
+    component: ESDTTxnHandler
   }
 ]

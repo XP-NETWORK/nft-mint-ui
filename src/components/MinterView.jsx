@@ -59,7 +59,7 @@ function MinterView() {
 
   // ELROND ESDT MINTING
   const [esdtName, setEsdtName] = useState('')
-  const [esdtCollection, setEsdtCollection] = useState('')
+  const [esdtTicker, setEsdtTicker] = useState('')
 
 
 
@@ -109,6 +109,19 @@ function MinterView() {
         sendElrdTx({
           transaction: txu,
           callbackRoute: "/processelrd"
+        })
+        break;
+      }
+      case Ledgers[2].label: {
+        const elrd = await ChainHandlers.elrd();
+        const txu = elrd.unsignedIssueESDTNft(
+          esdtName,
+          esdtTicker
+        );
+
+        sendElrdTx({
+          transaction: txu,
+          callbackRoute: "/processesdt"
         })
         break;
       }
@@ -236,22 +249,11 @@ function MinterView() {
    * Mutates the esdtCollectionName state
    * @param {Event} e the pointer to the caller
    */
-  const onEsdtCollectionChange = (e) => {
+  const onEsdtTickerChange = (e) => {
     const val = e.target.value;
     val
-      ? setEsdtCollection(val)
-      : setEsdtCollection('')
-  }
-
-  /**
-   * Handles the ESDT form "CREATE" button click
-   * 
-   * Initiates the ESDT Minting transaction on Elrond
-   */
-  const handleClickESDTMint = () => {
-
-    console.log('Check - ESDT Mint Click')
-
+      ? setEsdtTicker(val.toUpperCase())
+      : setEsdtTicker('')
   }
 
 
@@ -312,10 +314,10 @@ function MinterView() {
                 esdtName={esdtName}
                 onESDTNameChange={onESDTNameChange}
 
-                esdtCollection={esdtCollection}
-                onEsdtCollectionChange={onEsdtCollectionChange}
+                ticker={esdtTicker}
+                onTickerChange={onEsdtTickerChange}
 
-                onClick={handleClickESDTMint}
+                onClick={handleClickCreate}
 
               />
               : ('')
