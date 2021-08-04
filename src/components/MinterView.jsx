@@ -6,6 +6,9 @@ import { Ledgers } from '../assets/data/ledgers';
 
 import PlokadotMintNftView from './PolkadotMintNftView';
 import ElrondMintNftView from './ElrondMintNftView';
+import ESDTMint from './ElrondESDTView';
+
+
 import { UnsignedPreset } from '../config';
 import { ChainHandlers, post } from '../@utils/helper_functions';
 import * as Elrond from "@elrondnetwork/dapp";
@@ -48,6 +51,11 @@ function MinterView() {
   const [descrRows, setDescrRows] = useState(1);
 
   const sendElrdTx = Elrond.useSendTransaction();
+
+
+  // ELROND ESDT MINTING
+  const [esdtName, setEsdtName] = useState('')
+  const [esdtCollection, setEsdtCollection] = useState('')
 
  
 
@@ -193,7 +201,32 @@ function MinterView() {
   const handleChangeLedger = (o) => {
     const val = o.label;
     setLedger(val);
-    console.log(ledger)
+  }
+
+  // ==================================================
+  //              ELROND ESDT HANDLERS
+  // ==================================================
+
+
+  const onESDTNameChange = (e) => {
+    const val = e.target.value;
+    val 
+    ? setEsdtName(val) 
+    : setEsdtName('')
+  }
+
+  const onEsdtCollectionChange = (e) => {
+    const val = e.target.value;
+    val
+    ? setEsdtCollection(val)
+    : setEsdtCollection('')
+  }
+
+
+  const handleClickESDTMint = () => {
+
+    console.log('Check - ESDT Mint Click')
+    
   }
 
 
@@ -248,7 +281,19 @@ function MinterView() {
                 address={address}
                 onAccountChange={handleAccountChange}
               />)
-            : ('')
+            : ledger && ledger === Ledgers[2].label
+            ? <ESDTMint 
+
+            esdtName={esdtName}
+            onESDTNameChange={onESDTNameChange}
+
+            esdtCollection={esdtCollection}
+            onEsdtCollectionChange={onEsdtCollectionChange}
+
+            onClick={handleClickESDTMint}
+            
+            />
+            :('')
       }
 
 
