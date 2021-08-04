@@ -1,7 +1,6 @@
 import { elrondHelperFactory, polkadotPalletHelperFactory } from 'testsuite-ts';
-import { ChainConfig, ElrondKeys } from '../config';
+import { ChainConfig, ElrondDappConfig } from '../config';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
-import { UserSigner } from '@elrondnetwork/erdjs';
 
 /*const nft_info_encoded_t = new StructType('EncodedNft', [
     new StructFieldDefinition('token', '', new TokenIdentifierType()),
@@ -85,7 +84,16 @@ export const ChainHandlers = {
 
         return this._elrd;
     },
-    async elrondSigner(name) {
-        return UserSigner.fromPem(ElrondKeys[name]);
-    },
+    async elrondMintableNfts(address) {
+        let err;
+        const resp = await fetch(`${ElrondDappConfig.gatewayAddress}/address/${address}/esdts-with-role/ESDTRoleNFTCreate`).catch((e) => err = e);
+
+        if (err) {
+            return [undefined, err];
+        }
+    
+        const dat = await resp.json();
+
+        return [dat.data.tokens, undefined];
+    }
 }

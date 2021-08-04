@@ -137,7 +137,7 @@ function MinterView() {
   }
 
   const handleChangeESDT = (e) => {
-    const val = e.target.value;
+    const val = e.value;
     setEsdt(val);
     console.log(esdt)
   }
