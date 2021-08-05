@@ -1,4 +1,5 @@
 import React from 'react';
+import CreateButton from './CreateButton';
 import XPDropzone from './XPDropzone';
 
 const PlokadotMintNftView = (props) => {
@@ -28,9 +29,12 @@ const PlokadotMintNftView = (props) => {
             </div>
 
             <div className="group-container">
-                <button
+
+                    <CreateButton
+                    inactive={props.inactive}
                     onClick={props.onClick}
-                    className="xp-button">Create item</button>
+                    state={props.success}
+                    />
             </div>
 
 

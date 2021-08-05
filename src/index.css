@@ -190,11 +190,14 @@ input[type=number] {
   padding: 15px;
   width: 100%;
   opacity: 0.9;
-  /* box-shadow: inset 0px 2px 2px rgba(104, 164, 255, 0.25); */
   border: 0px solid #045ADB;
   border-radius: 6px;
   user-select: none;
   cursor: pointer;
+}
+
+.xp-button:disabled{
+  background-color: #374462;
 }
 
 .upload-button{

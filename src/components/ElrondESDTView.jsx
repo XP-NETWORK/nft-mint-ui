@@ -1,4 +1,5 @@
 import React from 'react';
+import CreateButton from './CreateButton';
 
 const ESDTMint = (props) => {
 
@@ -30,9 +31,11 @@ const ESDTMint = (props) => {
 
             <div className="group-container">
             <div className="bold-label"></div>
-                <button
+            <CreateButton
+                    inactive={props.inactive}
                     onClick={props.onClick}
-                    className="xp-button">Create ESDT</button>
+                    state={props.success}
+                    />
             </div>
 
 

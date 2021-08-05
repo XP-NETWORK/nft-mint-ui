@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import Select from 'react-select';
 import { ChainHandlers } from '../@utils/helper_functions';
 import XPDropzone from './XPDropzone';
+import CreateButton from './CreateButton';
 
 const dropStyle = {
     control: (base, state) => ({
@@ -147,10 +148,11 @@ const ElrondMintNftView = (props) => {
             </div>
 
             <div className="group-container">
-                <button
-                    disabled={esdts.length === 0}
+            <CreateButton
+                    inactive={props.inactive}
                     onClick={props.onClick}
-                    className="xp-button">Create item</button>
+                    state={props.success}
+                    />
             </div>
 
 

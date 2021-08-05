@@ -36,6 +36,8 @@ function MinterView() {
 
   // Common image blob storage
   const [blob, setBlob] = useState('');
+  const [success, setSuccess] = useState('');
+  const [inactive, setInactive] = useState(false)
 
 
   // ELROND STATE
@@ -83,51 +85,72 @@ function MinterView() {
 
   const handleClickCreate = async () => {
 
-    const url = await uploadImage();
+    setInactive(true);
 
-    switch (ledger) {
-      case Ledgers[0].label: {
-        const polka = await ChainHandlers.polka();
-        const signer = await ChainHandlers.polkadotSigner(polkaAddress);
-        const encoder = new TextEncoder();
-        console.log(encoder.encode(url));
+    try {
 
-        await polka.mintNft(signer, encoder.encode(url));
-        break;
+      const url = await uploadImage();
+
+      switch (ledger) {
+        case Ledgers[0].label: {
+          const polka = await ChainHandlers.polka();
+          const signer = await ChainHandlers.polkadotSigner(polkaAddress);
+          const encoder = new TextEncoder();
+          console.log(encoder.encode(url));
+
+          await polka.mintNft(signer, encoder.encode(url));
+          break;
+        }
+        case Ledgers[1].label: {
+          const elrd = await ChainHandlers.elrd();
+          const txu = elrd.unsignedMintNftTxn(new Erdjs.Address(address), {
+            identifier: esdt.toString(),
+            quantity: parseInt(copies),
+            name: name.toString(),
+            royalties: parseInt(royalties),
+            attrs: description.toString(),
+            uris: [url]
+          });
+
+          sendElrdTx({
+            transaction: txu,
+            callbackRoute: "/processelrd"
+          })
+          break;
+        }
+        case Ledgers[2].label: {
+          const elrd = await ChainHandlers.elrd();
+          const txu = elrd.unsignedIssueESDTNft(
+            esdtName,
+            esdtTicker
+          );
+
+          sendElrdTx({
+            transaction: txu,
+            callbackRoute: "/processesdt"
+          })
+          break;
+        }
+        default:
+          break;
       }
-      case Ledgers[1].label: {
-        const elrd = await ChainHandlers.elrd();
-        const txu = elrd.unsignedMintNftTxn(new Erdjs.Address(address), {
-          identifier: esdt.toString(),
-          quantity: parseInt(copies),
-          name: name.toString(),
-          royalties: parseInt(royalties),
-          attrs: description.toString(),
-          uris: [url]
-        });
 
-        sendElrdTx({
-          transaction: txu,
-          callbackRoute: "/processelrd"
-        })
-        break;
-      }
-      case Ledgers[2].label: {
-        const elrd = await ChainHandlers.elrd();
-        const txu = elrd.unsignedIssueESDTNft(
-          esdtName,
-          esdtTicker
-        );
+      setSuccess('success');
 
-        sendElrdTx({
-          transaction: txu,
-          callbackRoute: "/processesdt"
-        })
-        break;
-      }
-      default:
-        break;
+    } catch (error) {
+
+      console.error(error);
+      setSuccess('failure');
+
+
+    } finally {
+
+      setTimeout(() => {
+        setInactive(false);
+      }, 3000);
+
     }
+
 
   }
 
@@ -276,6 +299,8 @@ function MinterView() {
         ledger && ledger === Ledgers[0].label
           ? (
             <PlokadotMintNftView
+              inactive={inactive}
+              success={success}
               onChange={handleChangeFiles}
               onClick={handleClickCreate}
               value={polkaAddress}
@@ -284,6 +309,9 @@ function MinterView() {
           : ledger && ledger === Ledgers[1].label
             ? (
               <ElrondMintNftView
+
+                inactive={inactive}
+                success={success}
 
                 onChange={handleChangeFiles}
                 onClick={handleClickCreate}
@@ -318,6 +346,8 @@ function MinterView() {
                 onTickerChange={onEsdtTickerChange}
 
                 onClick={handleClickCreate}
+                inactive={inactive}
+                success={success}
 
               />
               : ('')
