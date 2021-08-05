@@ -1,7 +1,7 @@
 export const UnsignedPreset = "ttivi2nm";
 
 export const ChainConfig = {
-    "xpnode": "ws://localhost:9944",
+    "xpnode": "wss://34.246.187.188:443",
     "elrond_node": "https://devnet-api.elrond.com",
     "elrond_minter": "erd1qqqqqqqqqqqqqpgq7fzdnxa43vgau9myeasu2kw90fvpu40cs3ys5ez6s3",
     "elrond_event_rest": "http://localhost:6644",
