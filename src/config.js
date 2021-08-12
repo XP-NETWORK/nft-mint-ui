@@ -3,6 +3,11 @@ export const UnsignedPreset = "ttivi2nm";
 export const ChainConfig = {
     "xpnode": "wss://bridge.xp.network/node",
     "elrond_node": "https://devnet-api.elrond.com",
+	// Placeholder values that we dont care about
+    "elrond_minter": "erd1qqqqqqqqqqqqqpgq7fzdnxa43vgau9myeasu2kw90fvpu40cs3ys5ez6s3",
+    "elrond_event_rest": "http://localhost:6644",
+    "elrond_esdt": "XPNET-054f6c",
+    "elrond_esdt_nft": "XPNFT-57cb06"
 };
 
 export const walletConnectBridge = "https://bridge.walletconnect.org";
