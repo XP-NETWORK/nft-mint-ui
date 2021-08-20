@@ -38,6 +38,7 @@ function MinterView() {
   const [blob, setBlob] = useState('');
   const [success, setSuccess] = useState('');
   const [inactive, setInactive] = useState(false)
+  const [url, setUrl] = useState('');
 
 
   // ELROND STATE
@@ -88,8 +89,6 @@ function MinterView() {
     setInactive(true);
 
     try {
-
-      const url = await uploadImage();
 
       switch (ledger) {
         case Ledgers[0].label: {
@@ -279,6 +278,10 @@ function MinterView() {
       : setEsdtTicker('')
   }
 
+	const handleUrlChange = (e) => {
+	    setUrl(e.target.value)
+	}
+
 
   // ==================================================
   //                      J S X
@@ -305,6 +308,8 @@ function MinterView() {
               onClick={handleClickCreate}
               value={polkaAddress}
               onAccountChange={handlePolkaAccountChange}
+			  url={url}
+			  onChangeUrl={handleUrlChange}
             />)
           : ledger && ledger === Ledgers[1].label
             ? (
@@ -335,6 +340,8 @@ function MinterView() {
 
                 address={address}
                 onAccountChange={handleAccountChange}
+				url={url}
+				onChangeUrl={handleUrlChange}
               />)
             : ledger && ledger === Ledgers[2].label
               ? <ESDTMint
@@ -348,7 +355,6 @@ function MinterView() {
                 onClick={handleClickCreate}
                 inactive={inactive}
                 success={success}
-
               />
               : ('')
       }

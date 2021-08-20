@@ -20,13 +20,16 @@ const PlokadotMintNftView = (props) => {
                     placeholder="" />
             </div>
 
-            <div className="group-container">
-                <div className="dotted-frame">
-                    <XPDropzone 
-                        onChange={props.onChange}
-                    />
-                </div>
-            </div>
+			<div className="group-container">
+				<div className="bold-label">
+					URI
+				</div>
+				<input
+					value={props.url}
+					onChange={e => props.onChangeUrl(e)}
+					placeholder=""
+				/>
+			</div>
 
             <div className="group-container">
 
