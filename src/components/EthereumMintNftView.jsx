@@ -4,7 +4,6 @@ import XPDropzone from './XPDropzone';
 
 const ElrondMintNftView = (props) => {
 
-
     return (
         <main>
 

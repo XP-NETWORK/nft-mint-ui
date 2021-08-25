@@ -1,4 +1,4 @@
-import { elrondHelperFactory, polkadotPalletHelperFactory } from 'testsuite-ts';
+import { elrondHelperFactory, polkadotPalletHelperFactory, web3HelperFactory } from 'testsuite-ts';
 import { ChainConfig, ElrondDappConfig } from '../config';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 
