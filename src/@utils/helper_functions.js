@@ -2,9 +2,12 @@ import { elrondHelperFactory, polkadotPalletHelperFactory, web3HelperFactory } f
 import {
     ChainConfig,
     ElrondDappConfig,
+    CHAIN_INFO,
+    chains,
 
 } from '../config';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import { ethers, Wallet } from 'ethers';
 
 /*const nft_info_encoded_t = new StructType('EncodedNft', [
     new StructFieldDefinition('token', '', new TokenIdentifierType()),
@@ -99,5 +102,74 @@ export const ChainHandlers = {
         const dat = await resp.json();
 
         return [dat.data && dat.data.tokens, undefined];
+    }
+}
+
+/**
+ * Create ethers Wallet object from private key
+ * 
+ * @param {string} pk private key
+ * @returns ethers Wallet object
+ */
+ export const signerFromPk = (pk, web3Provider) => {
+    return new Wallet(pk, web3Provider);
+}
+
+/**
+ * Creates a provider from the name of the blockchain if it exists
+ * @param {string} chain 
+ * @returns the provider | undefined
+ */
+export const getProvider = async (chain) => {
+
+    try {
+        if (chains.includes(chain)){
+            const provider = await ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
+            return provider;
+        }else{
+            console.error("No chain was provided or the chain is not supported");
+            return undefined;
+        }
+        
+    } catch (error) {
+        console.error(error);
+        return undefined;
+    }
+}
+
+/**
+ * Mints an NFT on a Web3 compatible blockchain
+ * @param {string} chain - the blockchain where NFT will be minted
+ * @param {string} contract_owner -  the owner of the smart contract
+ * @param {string} contract - the address of the smart contract
+ * @param {string | number} token - token representation
+ * @param {string} owner - the target owner of the token
+ * @param {string} uri - the info linked to the token
+ */
+export const mintWeb3NFT = async (chain, token, owner, uri) => {
+
+    try {
+
+        // TODO: refactor - this will create a new provider on every call
+        const provider = await ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
+
+        if (provider && [chains[1], chains[3], chains[4]].includes(chain)) {
+            const helper = await web3HelperFactory(provider);
+            if (helper) {
+                const contract = CHAIN_INFO[chain].contract
+                await helper.mintWeb3NFT(
+                    signerFromPk(CHAIN_INFO[chain].contract_owner, provider),
+                    {
+                        contract,
+                        token,
+                        owner,
+                        uri
+                    }
+                )
+            }
+        }
+
+    } catch (error) {
+        console.error(error);
     }
 }

@@ -6,10 +6,11 @@ import { Ledgers } from "../assets/data/ledgers";
 
 import PlokadotMintNftView from "./PolkadotMintNftView";
 import ElrondMintNftView from "./ElrondMintNftView";
+import XPWeb3MintView from './Web3MintView';
 import ESDTMint from "./ElrondESDTView";
 
-import { UnsignedPreset } from "../config";
-import { ChainHandlers, post } from "../@utils/helper_functions";
+import { UnsignedPreset, CHAIN_INFO } from "../config";
+import { ChainHandlers, post, mintWeb3NFT } from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import * as Erdjs from "@elrondnetwork/erdjs/out";
 import { postCreateNFT } from "../@utils/createNFT";
@@ -58,6 +59,13 @@ function MinterView() {
   // ELROND ESDT MINTING
   const [esdtName, setEsdtName] = useState("");
   const [esdtTicker, setEsdtTicker] = useState("");
+
+
+  // WEB3 COMPATIBLE (BSC, Ethereum, HECO)
+  const [web3MinterTokenID, setWeb3MinterTokenID] = useState('');
+  const [web3MinterOwnerAccount, setWeb3MinterOwnerAccount] = useState('');
+  const [web3MinterNFTName, setWeb3MinterNFTName] = useState('');
+  const [web3MinterAssetLInk, setWeb3MinterAssetLInk] = useState('');
 
   // ==================================================
   //                COMMON HANDLERS
@@ -119,7 +127,7 @@ function MinterView() {
           //   const txHash = sendElrdTx()
           // });
 
-           let txu = await postCreateNFT(
+          let txu = await postCreateNFT(
             {
               link: url,
               name: name,
@@ -285,6 +293,49 @@ function MinterView() {
     setUrl(e.target.value);
   };
 
+
+  // ==================================================
+  //              WEB3 HANDLERS
+  // ==================================================
+
+  const handleWeb3Click = async () => {
+
+    setInactive(true);
+    try {
+
+      console.log("Create Item CLICK");
+      console.log("chain", ledger);
+      console.log("contract", CHAIN_INFO[ledger].contract);
+      console.log("owner", web3MinterOwnerAccount);
+      console.log("link", web3MinterAssetLInk);
+      console.log("name", web3MinterNFTName);
+      console.log("hash", web3MinterTokenID);
+      console.log("data", `${ledger},${CHAIN_INFO[ledger].contract},${web3MinterOwnerAccount},${web3MinterTokenID}`);
+
+      // await postCreateNFT({
+      //   link: web3MinterAssetLInk,
+      //   name: web3MinterNFTName,
+      //   data: `${ledger},${CHAIN_INFO[ledger].contract},${web3MinterOwnerAccount},${web3MinterTokenID}`,
+      //   hash: `${web3MinterTokenID}`
+      // }, obj => {
+      //   console.log(obj)
+      // TODO: run the mintNFT to db:
+
+      // })
+
+      setSuccess("success");
+    } catch (error) {
+      console.error(error);
+      setSuccess("failure");
+    } finally {
+      setTimeout(() => {
+        setInactive(false);
+      }, 3000);
+    }
+
+
+  }
+
   // ==================================================
   //                      J S X
   // ==================================================
@@ -343,7 +394,19 @@ function MinterView() {
           success={success}
         />
       ) : (
-        ""
+        <XPWeb3MintView
+          web3MinterTokenID={web3MinterTokenID}
+          setWeb3MinterTokenID={setWeb3MinterTokenID}
+          web3MinterOwnerAccount={web3MinterOwnerAccount}
+          setWeb3MinterOwnerAccount={setWeb3MinterOwnerAccount}
+          web3MinterNFTName={web3MinterNFTName}
+          setWeb3MinterNFTName={setWeb3MinterNFTName}
+          web3MinterAssetLInk={web3MinterAssetLInk}
+          setWeb3MinterAssetLInk={setWeb3MinterAssetLInk}
+          inactive={inactive}
+          success={success}
+          onClick={handleWeb3Click}
+        />
       )}
 
       <footer></footer>

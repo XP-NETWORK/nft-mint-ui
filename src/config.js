@@ -44,3 +44,53 @@ export const ElrondKeys = {
     NDg3ZGNkMjZjODRiNTAxN2EzOWUzMWEzNjcwODg5YmE=
 -----END PRIVATE KEY for erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8-----`
 }
+
+
+export const chains = [
+    'XP.network',   // 0
+    'BSC',          // 1
+    'Elrond',       // 2
+    'HECO',         // 3
+    'Ropsten',      // 4
+];
+
+export const coins = [
+    'XPNET',        // 0
+    'BNB',          // 1
+    'eGLD',         // 2
+    'HT',           // 3
+    'ETH',          // 4
+];
+
+
+export const CHAIN_INFO = {
+    'XP.network': { nonce: 1, native: 'XPNET', decimals: 1E12 },
+    'Elrond': { nonce: 2, native: 'EGLD', decimals: 1E18 },
+    'HECO': {
+        nonce: 3,
+        native: coins[2],
+        chainId: 256,
+        rpcUrl: "https://http-testnet.hecochain.com",
+        decimals: 1E18,
+        contract_owner:"0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
+        contract:"0x8b9c95147C185A9d0940DC26a6EA774eE05D8853"
+    },
+    'BSC': {
+        nonce: 4,
+        native: coins[3],
+        chainId: 97, 
+        rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
+        decimals: 1E18,
+        contract_owner:"0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
+        contract:"0x5b5C8b16937F60D02aFaC76bf6614c33911636FC"
+    },
+    'Ropsten': {
+        nonce: 5,
+        native: coins[4],
+        chainId: 3,
+        rpcUrl: "https://ropsten.infura.io/v3/182b3d3fb2d14d5fbe7421348624d1ce",
+        decimals: 1E18,
+        contract_owner:"0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
+        contract:"0xf6fceC833bFb9bd26a898143A6b41799F5Abfe0f"
+    }
+};
