@@ -1,4 +1,4 @@
-import { elrondHelperFactory, polkadotPalletHelperFactory, web3HelperFactory } from 'testsuite-ts';
+import { elrondHelperFactory, polkadotPalletHelperFactory, baseWeb3HelperFactory } from 'testsuite-ts';
 import {
     ChainConfig,
     ElrondDappConfig,
@@ -151,13 +151,14 @@ export const mintWeb3NFT = async (chain, token, owner, uri) => {
     try {
 
         // TODO: refactor - this will create a new provider on every call
-        const provider = await ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
+        const provider = ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
 
         if (provider && [chains[1], chains[3], chains[4]].includes(chain)) {
-            const helper = await web3HelperFactory(provider);
-            if (helper) {
+
+            console.log(provider, chain)
+
                 const contract = CHAIN_INFO[chain].contract
-                await helper.mintWeb3NFT(
+                await baseWeb3HelperFactory(provider).mintNFT(
                     signerFromPk(CHAIN_INFO[chain].contract_owner, provider),
                     {
                         contract,
@@ -166,7 +167,6 @@ export const mintWeb3NFT = async (chain, token, owner, uri) => {
                         uri
                     }
                 )
-            }
         }
 
     } catch (error) {

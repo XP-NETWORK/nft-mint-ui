@@ -304,25 +304,25 @@ function MinterView() {
     try {
 
       console.log("Create Item CLICK");
-      console.log("chain", ledger);
-      console.log("contract", CHAIN_INFO[ledger].contract);
-      console.log("owner", web3MinterOwnerAccount);
-      console.log("link", web3MinterAssetLInk);
-      console.log("name", web3MinterNFTName);
-      console.log("hash", web3MinterTokenID);
-      console.log("data", `${ledger},${CHAIN_INFO[ledger].contract},${web3MinterOwnerAccount},${web3MinterTokenID}`);
+      const doc = {
+        link: web3MinterAssetLInk,
+        name: web3MinterNFTName,
+        data: `${ledger},${CHAIN_INFO[ledger].contract},${web3MinterOwnerAccount},${web3MinterTokenID}`,
+        hash: `${web3MinterTokenID}`
+      }
 
-      // await postCreateNFT({
-      //   link: web3MinterAssetLInk,
-      //   name: web3MinterNFTName,
-      //   data: `${ledger},${CHAIN_INFO[ledger].contract},${web3MinterOwnerAccount},${web3MinterTokenID}`,
-      //   hash: `${web3MinterTokenID}`
-      // }, obj => {
-      //   console.log(obj)
-      // TODO: run the mintNFT to db:
+      console.log(doc)
 
-      // })
+      postCreateNFT(doc, async id => {
 
+        if( id){
+          const result = await mintWeb3NFT(ledger, web3MinterTokenID, id);
+          console.log("MongoDB ObjectId:", id, "result", result)
+        }else{
+          console.error("The _id has not arrived or the object was not created")
+        }
+        
+      });
       setSuccess("success");
     } catch (error) {
       console.error(error);
