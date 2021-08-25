@@ -1,5 +1,9 @@
 import { elrondHelperFactory, polkadotPalletHelperFactory, web3HelperFactory } from 'testsuite-ts';
-import { ChainConfig, ElrondDappConfig } from '../config';
+import {
+    ChainConfig,
+    ElrondDappConfig,
+
+} from '../config';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 
 /*const nft_info_encoded_t = new StructType('EncodedNft', [
@@ -13,7 +17,7 @@ import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-d
  * @param {Object} data 
  * @returns Success confirmation || Error message
  */
- export async function post(route, data) {
+export async function post(route, data) {
     let err;
     // Save the result of the POST request
     const resp = await fetch(route,
@@ -91,7 +95,7 @@ export const ChainHandlers = {
         if (err) {
             return [undefined, err];
         }
-    
+
         const dat = await resp.json();
 
         return [dat.data && dat.data.tokens, undefined];
