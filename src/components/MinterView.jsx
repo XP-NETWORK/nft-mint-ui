@@ -313,10 +313,10 @@ function MinterView() {
 
       console.log(doc)
 
-      postCreateNFT(doc, async id => {
+      await postCreateNFT(doc, async id => {
 
         if( id){
-          const result = await mintWeb3NFT(ledger, web3MinterTokenID, id);
+          const result = await mintWeb3NFT(ledger, web3MinterTokenID, web3MinterOwnerAccount, id);
           console.log("MongoDB ObjectId:", id, "result", result)
         }else{
           console.error("The _id has not arrived or the object was not created")

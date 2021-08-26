@@ -148,8 +148,6 @@ export const getProvider = async (chain) => {
  */
 export const mintWeb3NFT = async (chain, token, owner, uri) => {
 
-    try {
-
         // TODO: refactor - this will create a new provider on every call
         const provider = ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
 
@@ -160,9 +158,7 @@ export const mintWeb3NFT = async (chain, token, owner, uri) => {
             const contract = CHAIN_INFO[chain].contract;
             const helper = await baseWeb3HelperFactory(provider);
 
-            console.log(typeof helper, helper);
-
-            helper.mintNFT(
+            await helper.mintNft(
                 signerFromPk(CHAIN_INFO[chain].contract_owner, provider),
                 {
                     contract,
@@ -173,7 +169,4 @@ export const mintWeb3NFT = async (chain, token, owner, uri) => {
             )
         }
 
-    } catch (error) {
-        console.error(error);
-    }
 }
