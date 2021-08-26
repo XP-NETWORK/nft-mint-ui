@@ -111,7 +111,7 @@ export const ChainHandlers = {
  * @param {string} pk private key
  * @returns ethers Wallet object
  */
- export const signerFromPk = (pk, web3Provider) => {
+export const signerFromPk = (pk, web3Provider) => {
     return new Wallet(pk, web3Provider);
 }
 
@@ -123,14 +123,14 @@ export const ChainHandlers = {
 export const getProvider = async (chain) => {
 
     try {
-        if (chains.includes(chain)){
+        if (chains.includes(chain)) {
             const provider = await ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
             return provider;
-        }else{
+        } else {
             console.error("No chain was provided or the chain is not supported");
             return undefined;
         }
-        
+
     } catch (error) {
         console.error(error);
         return undefined;
@@ -157,16 +157,20 @@ export const mintWeb3NFT = async (chain, token, owner, uri) => {
 
             console.log(provider, chain)
 
-                const contract = CHAIN_INFO[chain].contract
-                await baseWeb3HelperFactory(provider).mintNFT(
-                    signerFromPk(CHAIN_INFO[chain].contract_owner, provider),
-                    {
-                        contract,
-                        token,
-                        owner,
-                        uri
-                    }
-                )
+            const contract = CHAIN_INFO[chain].contract;
+            const helper = await baseWeb3HelperFactory(provider);
+
+            console.log(typeof helper, helper);
+
+            helper.mintNFT(
+                signerFromPk(CHAIN_INFO[chain].contract_owner, provider),
+                {
+                    contract,
+                    token,
+                    owner,
+                    uri
+                }
+            )
         }
 
     } catch (error) {
