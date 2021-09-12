@@ -38,96 +38,142 @@ export async function post(route, data) {
     return [await resp.json(), undefined];
 }
 
-export const ChainHandlers = {
-    _polka: undefined,
-    _polkaExtInit: undefined,
-    _elrd: undefined,
-    async _requirePolkadotExt() {
-        if (!this._polkaExtInit) {
-            await web3Enable('XPNET Cross Chain Bridge');
-            this._polkaExtInit = true;
-        }
-    },
-    async _requirePolka() {
-        if (!this._polka) {
-            this._polka = await polkadotPalletHelperFactory(
-                ChainConfig.xpnode,
-                //ChainConfig.xp_freezer,
-                //ChainConfig.xp_freezer
+/**
+ * Wrapper over PolkadotPalletHelper
+ */
+ export function PolkadotHelper() {
+    let polka = undefined;
+    const keyring = new Keyring();
+
+    async function requirePolka() {
+        if (polka === undefined) {
+            polka = await polkadotPalletHelperFactory(
+                ChainConfig.xpnode
             );
         }
-    },
-    async polka() {
-        await this._requirePolka();
+    }
 
-        return this._polka;
-    },
-    async polkadotAccounts() {
-        await this._requirePolkadotExt();
+    return {
+        ident: 'XP.network',
+        /**
+         * @returns inner PolkadotPalletHelper 
+         */
+        async inner() {
+            await requirePolka();
 
-        return (await web3Accounts())
-            .map((v) => v.address)
-    },
-    async _requireElrd() {
-        if (!this._elrd) {
-            this._elrd = await elrondHelperFactory(
+            return polka;
+        },
+        /**
+         * Create keypair from uri
+         * 
+         * @param {string} pk Derivation path uri
+         * @returns Keypair signer
+         */
+        async signerFromPk(pk) {
+            return { sender: keyring.createFromUri(pk, undefined, 'sr25519') }
+        }
+    }
+}
+
+/**
+ * Wrapper over ElrondHelper from testsuite-ts
+ */
+export function ElrondHelper() {
+    let elrd = undefined;
+
+    async function requireElrd() {
+        if (elrd === undefined) {
+            elrd = await elrondHelperFactory(
                 ChainConfig.elrond_node,
                 ChainConfig.elrond_minter,
-                ChainConfig.elrond_event_rest,
                 ChainConfig.elrond_esdt,
                 ChainConfig.elrond_esdt_nft
             );
         }
-    },
-    async elrd() {
-        await this._requireElrd();
+    }
 
-        return this._elrd;
-    },
-    async elrondMintableNfts(address) {
-        let err;
-        const resp = await fetch(`${ElrondDappConfig.gatewayAddress}/address/${address}/esdts-with-role/ESDTRoleNFTCreate`).catch((e) => err = e);
+    return {
+        ident: 'Elrond',
+        /**
+         * 
+         * @returns Inner ElrondHelper from testsuite-ts
+         */
+        async inner() {
+            await requireElrd();
 
-        if (err) {
-            return [undefined, err];
+            return elrd;
+        },
+        /**
+         * Create elrond user signer from pem
+         * 
+         * @param {string} pk pem content
+         * @returns Elrond UserSigner
+         */
+        async signerFromPk(pk) {
+            return UserSigner.fromPem(pk);
         }
-
-        const dat = await resp.json();
-
-        return [dat.data && dat.data.tokens, undefined];
     }
 }
 
 /**
- * Create ethers Wallet object from private key
+ * Wrapper over Web3Helper from testsuite-ts
  * 
- * @param {string} pk private key
- * @returns ethers Wallet object
+ * @param {string} chain identifier of the web3 chain
  */
-export const signerFromPk = (pk, web3Provider) => {
-    return new Wallet(pk, web3Provider);
+export function Web3Helper(chain) {
+    let web3 = undefined;
+    let web3Provider = undefined;
+    const minter_addr = ChainConfig.web3_minters[chain];
+    const erc1155_abi = new ethers.utils.Interface(ERC1155_abi); 
+
+    async function requireWeb3() {
+        if (!web3) {
+            web3Provider = ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
+            await web3Provider.ready;
+        }
+        web3 = await web3HelperFactory(
+            web3Provider,
+            minter_addr,
+            new ethers.utils.Interface(abi),
+            ChainConfig.web3_erc1155[chain]
+        );
+    }
+
+    return {
+        ident: chain,
+        /**
+         * @returns Inner Web3Helper from testsuite-ts
+         */
+        async inner() {
+            await requireWeb3();
+
+            return web3;
+        },
+        /**
+         * Create ethers Wallet object from private key
+         * 
+         * @param {string} pk private key
+         * @returns ethers Wallet object
+         */
+        async signerFromPk(pk) {
+            await requireWeb3();
+
+            return new Wallet(pk, web3Provider);
+        }
+    }
 }
 
 /**
- * Creates a provider from the name of the blockchain if it exists
- * @param {string} chain 
- * @returns the provider | undefined
+ * Factories for Chains by Chain Name
  */
-export const getProvider = async (chain) => {
-
-    try {
-        if (chains.includes(chain)) {
-            const provider = await ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
-            return provider;
-        } else {
-            console.error("No chain was provided or the chain is not supported");
-            return undefined;
-        }
-
-    } catch (error) {
-        console.error(error);
-        return undefined;
-    }
+ export const ChainFactory = {
+    "XP.network": PolkadotHelper(),
+    "Elrond": ElrondHelper(),
+    "HECO": Web3Helper("HECO"),
+    "BSC": Web3Helper("BSC"),
+    "Ropsten": Web3Helper("Ropsten"),
+    "Avalanche": Web3Helper("Avalanche"),
+    "Polygon": Web3Helper("Polygon")
 }
 
 /**
@@ -140,26 +186,17 @@ export const getProvider = async (chain) => {
  * @param {string} uri - the info linked to the token
  */
 export const mintWeb3NFT = async (chain, token, owner, uri) => {
+    const contract = CHAIN_INFO[chain].contract;
+    const helper = ChainFactory[chain];
+    const inner = await helper.inner()
 
-        // TODO: refactor - this will create a new provider on every call
-        const provider = ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
-
-        if (provider && [chains[1], chains[3], chains[4]].includes(chain)) {
-
-            console.log(provider, chain)
-
-            const contract = CHAIN_INFO[chain].contract;
-            const helper = await baseWeb3HelperFactory(provider);
-
-            await helper.mintNft(
-                signerFromPk(CHAIN_INFO[chain].contract_owner, provider),
-                {
-                    contract,
-                    token,
-                    owner,
-                    uri
-                }
-            )
+    await inner.mintNft(
+        helper.signerFromPk(CHAIN_INFO[chain].contract_owner),
+        {
+            contract,
+            token,
+            owner,
+            uri
         }
-
+    )
 }

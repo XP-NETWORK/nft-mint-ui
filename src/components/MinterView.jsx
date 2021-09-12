@@ -10,7 +10,7 @@ import XPWeb3MintView from './Web3MintView';
 import ESDTMint from "./ElrondESDTView";
 
 import { UnsignedPreset, CHAIN_INFO } from "../config";
-import { ChainHandlers, post, mintWeb3NFT } from "../@utils/helper_functions";
+import { ChainFactory, post, mintWeb3NFT } from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import * as Erdjs from "@elrondnetwork/erdjs/out";
 import { postCreateNFT } from "../@utils/createNFT";
@@ -82,39 +82,22 @@ function MinterView() {
     try {
       switch (ledger) {
         case Ledgers[0].label: {
-          const polka = await ChainHandlers.polka();
-		  const signer = { sender: polkaAddress };
-          const encoder = new TextEncoder();
-          console.log(encoder.encode(url));
+        const polka = await ChainFactory["XP.network"].inner();
+		    const signer = { sender: polkaAddress };
+        const encoder = new TextEncoder();
 
-          await postCreateNFT(
-            {
-              link: url,
-              name: name,
-              data: `${'XP.network'},${polkaAddress}`
-            },
-            (hash) => polka.mintNft(signer, encoder.encode(hash))
-          );
-          break;
-        }
+        await postCreateNFT(
+          {
+            link: url,
+            name: name,
+            data: `${'XP.network'},${polkaAddress}`
+          },
+          (hash) => polka.mintNft(signer, encoder.encode(hash))
+        );
+        break;
+      }
         case Ledgers[1].label: {
           const elrd = await ChainHandlers.elrd();
-          // const txu = elrd.unsignedMintNftTxn(new Erdjs.Address(address), {
-          //   identifier: esdt.toString(),
-          //   quantity: parseInt(copies),
-          //   name: name.toString(),
-          //   royalties: parseInt(royalties),
-          //   attrs: description.toString(),
-          //   uris: [url],
-          // });
-
-          // console.log(txu);
-
-          // const txHash = sendElrdTx();
-          // console.log(txHash);
-          // postCreateNFT({link: url , name: name, data: description}, () => {
-          //   const txHash = sendElrdTx()
-          // });
 
           let txu = await postCreateNFT(
             {
