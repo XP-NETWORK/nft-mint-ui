@@ -9,8 +9,8 @@ import ElrondMintNftView from "./ElrondMintNftView";
 import XPWeb3MintView from './Web3MintView';
 import ESDTMint from "./ElrondESDTView";
 
-import { UnsignedPreset, CHAIN_INFO } from "../config";
-import { ChainFactory, post, mintWeb3NFT } from "../@utils/helper_functions";
+import { CHAIN_INFO, TronAccs } from "../config";
+import { ChainFactory, mintWeb3NFT } from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import * as Erdjs from "@elrondnetwork/erdjs/out";
 import { postCreateNFT } from "../@utils/createNFT";
@@ -33,7 +33,7 @@ function MinterView() {
   const [polkaAddress, setPolkaAddress] = useState("");
 
   // Common image blob storage
-  const [blob, setBlob] = useState("");
+  const [, setBlob] = useState("");
   const [success, setSuccess] = useState("");
   const [inactive, setInactive] = useState(false);
   const [url, setUrl] = useState("");
@@ -97,7 +97,7 @@ function MinterView() {
         break;
       }
         case Ledgers[1].label: {
-          const elrd = await ChainHandlers.elrd();
+          const elrd = await ChainFactory["Elrond"].inner();
 
           let txu = await postCreateNFT(
             {
@@ -123,7 +123,7 @@ function MinterView() {
           break;
         }
         case Ledgers[2].label: {
-          const elrd = await ChainHandlers.elrd();
+          const elrd = await ChainFactory["Elrond"].inner();
           const txu = elrd.unsignedIssueESDTNft(esdtName, esdtTicker);
 
 
@@ -309,8 +309,12 @@ function MinterView() {
   }
 
 
-  const onClickDeploy = () => {
-    // Here's the deployment code...
+  const onClickDeploy = async () => {
+    const inner = await ChainFactory[ledger].inner();
+
+    CHAIN_INFO[ledger].contract_owner = TronAccs.ACC1.key;
+    CHAIN_INFO[ledger].contract = await inner.deployErc1155(TronAccs.ACC1.key);
+    console.log("minter: ", CHAIN_INFO[ledger].contract);
   }
 
   // ==================================================

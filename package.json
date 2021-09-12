@@ -19,6 +19,7 @@
     "react-scripts": "4.0.3",
     "react-select": "^4.3.1",
     "testsuite-ts": "git+https://github.com/xp-network/bridge-ui-logics#tron",
+    "tronweb": "^4.0.0",
     "web-vitals": "^1.0.1",
     "webpack-cloudinary-plugin": "^0.1.10-beta"
   },

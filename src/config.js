@@ -45,6 +45,14 @@ export const ElrondKeys = {
 -----END PRIVATE KEY for erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8-----`
 }
 
+export const TronAccs = {
+    "ACC1": {
+        name: "ACC1",
+        account: "TJuG3kvmGBDxGyUPBbvKePUjbopLurtqSo",
+        key: "991EE549C12DA5EC5AF246FB0733A334CB918D3A28D91DC4FEA19BAB7D3FFA8A"
+    }
+}
+
 
 export const chains = [
     'XP.network',   // 0

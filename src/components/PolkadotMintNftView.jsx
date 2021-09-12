@@ -1,6 +1,6 @@
 import React from "react";
 import CreateButton from "./CreateButton";
-import XPDropzone from "./XPDropzone";
+
 
 const PlokadotMintNftView = (props) => {
   return (

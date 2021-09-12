@@ -1,6 +1,6 @@
 import React from "react";
 import CreateButton from "./CreateButton";
-import { chains } from "../config";
+import { CHAIN_INFO } from "../config";
 
 const XPWeb3MintView = (props) => {
 
@@ -46,25 +46,20 @@ const XPWeb3MintView = (props) => {
 
             <div className="group-container">
                 <CreateButton
-                    inactive={props.inactive}
+                    inactive={props.inactive || CHAIN_INFO[props.ledger].contract === undefined}
                     onClick={props.onClick}
                     state={props.success}
                 />
             </div>
 
-            {props.ledger == chains[7]
-            ? (
-                <div className="group-container">
-                <CreateButton
-                    inactive={props.inactive}
-                    onClick={props.onClickDeploy}
-                    state={props.success}
-                    caption="deploy"
-                />
-            </div>
-            )
-            : ""
-            }
+            <div className="group-container">
+            <CreateButton
+                inactive={props.inactive || CHAIN_INFO[props.ledger].contract !== undefined}
+                onClick={props.onClickDeploy}
+                state={props.success}
+                caption="deploy"
+            />
+        </div>
 
         </main>
     )

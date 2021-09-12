@@ -1,6 +1,6 @@
 import { Address, TransactionHash } from "@elrondnetwork/erdjs/out";
 import { useEffect, useRef } from "react";
-import { ChainHandlers } from "../@utils/helper_functions";
+import { ChainFactory } from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import { useLocation } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ export default function ESDTTxnHandler() {
 
     useEffect(() => {
         (async () => {
-            const elrd = await ChainHandlers.elrd();
+            const elrd = await ChainFactory["Elrond"].inner();
             const res = await elrd.rawTxnResult(new TransactionHash(query.current.get("txHash")));
 
             const sender = res['sender'];

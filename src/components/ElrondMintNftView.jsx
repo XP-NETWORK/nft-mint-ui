@@ -3,8 +3,7 @@ import { Address } from '@elrondnetwork/erdjs/out';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import Select from 'react-select';
-import { ChainHandlers } from '../@utils/helper_functions';
-import XPDropzone from './XPDropzone';
+import { ChainFactory } from '../@utils/helper_functions';
 import CreateButton from './CreateButton';
 
 const dropStyle = {
@@ -55,7 +54,7 @@ const ElrondMintNftView = (props) => {
                 return;
             }
 
-            const tokens = await ChainHandlers.elrondMintableNfts(props.address);
+            const tokens = await ChainFactory["Elrond"].elrondMintableNfts(props.address);
             if (tokens[0] === undefined) {
                 return;
             }

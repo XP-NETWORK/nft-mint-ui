@@ -1,13 +1,13 @@
-import { elrondHelperFactory, polkadotPalletHelperFactory, baseWeb3HelperFactory } from 'testsuite-ts';
+import { elrondHelperFactory, polkadotPalletHelperFactory, baseWeb3HelperFactory, baseTronHelperFactory } from 'testsuite-ts';
 import {
     ChainConfig,
     ElrondDappConfig,
     CHAIN_INFO,
-    chains,
 
 } from '../config';
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { ethers, Wallet } from 'ethers';
+import TronWeb from "tronweb";
+import { UserSigner } from '@elrondnetwork/erdjs/out';
 
 /*const nft_info_encoded_t = new StructType('EncodedNft', [
     new StructFieldDefinition('token', '', new TokenIdentifierType()),
@@ -43,7 +43,6 @@ export async function post(route, data) {
  */
  export function PolkadotHelper() {
     let polka = undefined;
-    const keyring = new Keyring();
 
     async function requirePolka() {
         if (polka === undefined) {
@@ -63,15 +62,6 @@ export async function post(route, data) {
 
             return polka;
         },
-        /**
-         * Create keypair from uri
-         * 
-         * @param {string} pk Derivation path uri
-         * @returns Keypair signer
-         */
-        async signerFromPk(pk) {
-            return { sender: keyring.createFromUri(pk, undefined, 'sr25519') }
-        }
     }
 }
 
@@ -103,6 +93,18 @@ export function ElrondHelper() {
 
             return elrd;
         },
+        async elrondMintableNfts(address) {
+            let err;
+            const resp = await fetch(`${ElrondDappConfig.gatewayAddress}/address/${address}/esdts-with-role/ESDTRoleNFTCreate`).catch((e) => err = e);
+    
+            if (err) {
+                return [undefined, err];
+            }
+    
+            const dat = await resp.json();
+    
+            return [dat.data && dat.data.tokens, undefined];
+        },
         /**
          * Create elrond user signer from pem
          * 
@@ -123,20 +125,16 @@ export function ElrondHelper() {
 export function Web3Helper(chain) {
     let web3 = undefined;
     let web3Provider = undefined;
-    const minter_addr = ChainConfig.web3_minters[chain];
-    const erc1155_abi = new ethers.utils.Interface(ERC1155_abi); 
 
     async function requireWeb3() {
         if (!web3) {
             web3Provider = ethers.providers.getDefaultProvider(CHAIN_INFO[chain].rpcUrl);
             await web3Provider.ready;
+
+            web3 = await baseWeb3HelperFactory(
+                web3Provider,
+            );
         }
-        web3 = await web3HelperFactory(
-            web3Provider,
-            minter_addr,
-            new ethers.utils.Interface(abi),
-            ChainConfig.web3_erc1155[chain]
-        );
     }
 
     return {
@@ -163,6 +161,31 @@ export function Web3Helper(chain) {
     }
 }
 
+export function TronHelper() {
+    let tronWeb = undefined;
+    let tronWebp = undefined;
+
+    async function requireTron() {
+        if (tronWeb === undefined) {
+            tronWebp = new TronWeb({
+                fullHost: "https://api.shasta.trongrid.io/",
+                privateKey: "991EE549C12DA5EC5AF246FB0733A334CB918D3A28D91DC4FEA19BAB7D3FFA8A"
+            })
+            tronWeb = await baseTronHelperFactory(tronWebp)
+        }
+    }
+
+    return {
+        ident: "Tron",
+        async inner() {
+            await requireTron();
+
+            return tronWeb;
+        },
+        signerFromPk: (pk) => Promise.resolve(pk)
+    }
+}
+
 /**
  * Factories for Chains by Chain Name
  */
@@ -173,7 +196,8 @@ export function Web3Helper(chain) {
     "BSC": Web3Helper("BSC"),
     "Ropsten": Web3Helper("Ropsten"),
     "Avalanche": Web3Helper("Avalanche"),
-    "Polygon": Web3Helper("Polygon")
+    "Polygon": Web3Helper("Polygon"),
+    "Tron": TronHelper()
 }
 
 /**
