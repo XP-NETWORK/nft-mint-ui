@@ -9,12 +9,13 @@ const stateText = {
     'success': 'Success',
     'failure': 'Failure',
     'disabled': 'Executing',
-    'enabled': 'Create Item'
+    'enabled': 'Create Item',
+    'deploy':'Deploy Smart Contract'
 }
 
-const CreateButton = ({ onClick, inactive, state }) => {
+const CreateButton = ({ onClick, inactive, state, caption }) => {
 
-    const stateS = inactive ? state || 'disabled' : 'enabled';
+    const stateS = caption ? caption : (inactive ? state || 'disabled' : 'enabled');
 
     const styles = {
 

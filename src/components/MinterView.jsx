@@ -336,6 +336,11 @@ function MinterView() {
 
   }
 
+
+  const onClickDeploy = () => {
+    // Here's the deployment code...
+  }
+
   // ==================================================
   //                      J S X
   // ==================================================
@@ -406,6 +411,8 @@ function MinterView() {
           inactive={inactive}
           success={success}
           onClick={handleWeb3Click}
+          onClickDeploy={onClickDeploy}
+          ledger={ledger}
         />
       )}
 

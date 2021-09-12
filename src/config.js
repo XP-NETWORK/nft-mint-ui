@@ -52,6 +52,9 @@ export const chains = [
     'Elrond',       // 2
     'HECO',         // 3
     'Ropsten',      // 4
+    'Fantom',       // 5
+    'Polygon',      // 6
+    'Tron',         // 7
 ];
 
 export const coins = [
@@ -92,5 +95,14 @@ export const CHAIN_INFO = {
         decimals: 1E18,
         contract_owner:"0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
         contract:"0xf6fceC833bFb9bd26a898143A6b41799F5Abfe0f"
+    },
+    'Fantom':{
+
+    },
+    'Polygon':{
+        
+    },
+    'Tron':{
+        
     }
 };
