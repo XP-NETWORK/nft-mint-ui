@@ -68,13 +68,6 @@ export const ChainHandlers = {
         return (await web3Accounts())
             .map((v) => v.address)
     },
-    async polkadotSigner(address) {
-        await this._requirePolkadotExt();
-
-        const injector = await web3FromAddress(address);
-
-        return { sender: address, options: { signer: injector.signer } };
-    },
     async _requireElrd() {
         if (!this._elrd) {
             this._elrd = await elrondHelperFactory(

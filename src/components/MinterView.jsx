@@ -77,24 +77,13 @@ function MinterView() {
     }
   };
 
-  const uploadImage = async () => {
-    const formdat = new FormData();
-    formdat.append("file", blob);
-    formdat.append("upload_preset", UnsignedPreset);
-    const res = await post(
-      "https://api.cloudinary.com/v1_1/xp-network/image/upload",
-      formdat
-    );
-    return res[0].url;
-  };
-
   const handleClickCreate = async () => {
     setInactive(true);
     try {
       switch (ledger) {
         case Ledgers[0].label: {
           const polka = await ChainHandlers.polka();
-          const signer = await ChainHandlers.polkadotSigner(polkaAddress);
+		  const signer = { sender: polkaAddress };
           const encoder = new TextEncoder();
           console.log(encoder.encode(url));
 
