@@ -105,7 +105,11 @@ export const CHAIN_INFO = {
         contract:"0xf6fceC833bFb9bd26a898143A6b41799F5Abfe0f"
     },
     'Fantom':{
-
+		nonce: 7,
+		rpcUrl: "https://rpc.testnet.fantom.network/",
+		decimals: 1E18,
+		contract_owner: "0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
+		contract: "0xB0cA1d0424975EA639579BA72f4E5935391c7b4e"
     },
     'Polygon':{
         

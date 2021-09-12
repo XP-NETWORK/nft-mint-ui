@@ -197,6 +197,7 @@ export function TronHelper() {
     "Ropsten": Web3Helper("Ropsten"),
     "Avalanche": Web3Helper("Avalanche"),
     "Polygon": Web3Helper("Polygon"),
+	"Fantom": Web3Helper("Fantom"),
     "Tron": TronHelper()
 }
 
@@ -215,7 +216,7 @@ export const mintWeb3NFT = async (chain, token, owner, uri) => {
     const inner = await helper.inner()
 
     await inner.mintNft(
-        helper.signerFromPk(CHAIN_INFO[chain].contract_owner),
+        await helper.signerFromPk(CHAIN_INFO[chain].contract_owner),
         {
             contract,
             token,
