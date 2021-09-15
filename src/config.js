@@ -105,7 +105,7 @@ export const CHAIN_INFO = {
         contract:"0xf6fceC833bFb9bd26a898143A6b41799F5Abfe0f"
     },
     'Fantom':{
-		nonce: 7,
+		nonce: 0x8,
 		rpcUrl: "https://rpc.testnet.fantom.network/",
 		decimals: 1E18,
 		contract_owner: "0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
@@ -115,6 +115,10 @@ export const CHAIN_INFO = {
         
     },
     'Tron':{
-        
+		nonce: 0x9,
+		rpcUrl: "https://api.shasta.trongrid.io/",
+		decimals: 1E6,
+		contract_owner: "991EE549C12DA5EC5AF246FB0733A334CB918D3A28D91DC4FEA19BAB7D3FFA8A",
+		contract: "417cc883b5da914678e0ac952d954adaa37156721d"
     }
 };

@@ -168,8 +168,8 @@ export function TronHelper() {
     async function requireTron() {
         if (tronWeb === undefined) {
             tronWebp = new TronWeb({
-                fullHost: "https://api.shasta.trongrid.io/",
-                privateKey: "991EE549C12DA5EC5AF246FB0733A334CB918D3A28D91DC4FEA19BAB7D3FFA8A"
+                fullHost: CHAIN_INFO["Tron"].rpcUrl,
+                privateKey: CHAIN_INFO["Tron"].contract_owner
             })
             tronWeb = await baseTronHelperFactory(tronWebp)
         }
