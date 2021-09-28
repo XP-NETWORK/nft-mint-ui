@@ -7,6 +7,8 @@ import { Ledgers } from "../assets/data/ledgers";
 import PlokadotMintNftView from "./PolkadotMintNftView";
 import ElrondMintNftView from "./ElrondMintNftView";
 import XPWeb3MintView from "./Web3MintView";
+
+import { NFTStorage } from "nft.storage";
 import ESDTMint from "./ElrondESDTView";
 
 import { CHAIN_INFO, TronAccs } from "../config";
@@ -269,31 +271,46 @@ function MinterView() {
   const handleWeb3Click = async () => {
     setInactive(true);
     try {
+      const endpoint = "https://api.nft.storage";
+      const token = process.env.KEY;
+      const storage = new NFTStorage({ endpoint, token });
       console.log("Create Item CLICK");
-      const doc = {
-        link: web3MinterAssetLInk,
+      const metadata = await storage.store({
         name: web3MinterNFTName,
-        data: `${ledger},${CHAIN_INFO[ledger].contract},${web3MinterOwnerAccount},${web3MinterTokenID}`,
-        hash: `${web3MinterTokenID}`,
-      };
-
-      console.log(doc);
-
-      await postCreateNFT(doc, async (id) => {
-        if (id) {
-          const result = await mintWeb3NFT(
-            ledger,
-            web3MinterTokenID,
-            web3MinterOwnerAccount,
-            id
-          );
-          console.log("MongoDB ObjectId:", id, "result", result);
-        } else {
-          console.error(
-            "The _id has not arrived or the object was not created"
-          );
-        }
+        description: "A really cool test NFT",
+        image: web3MinterAssetLInk,
+        // Use the file from the input instead.
+        // new File(
+        //   [await fs.promises.readFile("OutOfEarth.png")],
+        //   "OutOfEarth.jpg",
+        //   {
+        //     type: "image/png",
+        //   }
+        // )
+        attributes: [
+          {
+            display_type: "date",
+            trait_type: "birthday",
+            value: Math.round(new Date().getTime() / 1000), // Value must be a unix timestamp.
+          },
+        ],
       });
+
+      // const doc = {
+      //   link: web3MinterAssetLInk,
+      //   name: web3MinterNFTName,
+      //   data: `${ledger},${CHAIN_INFO[ledger].contract},${web3MinterOwnerAccount},${web3MinterTokenID}`,
+      //   hash: `${web3MinterTokenID}`,
+      // };
+
+      console.log(metadata);
+      const result = await mintWeb3NFT(
+        ledger,
+        web3MinterTokenID,
+        web3MinterOwnerAccount,
+        metadata.url
+      );
+      console.log("Metadata Url:", metadata.url, "result", result);
       setSuccess("success");
     } catch (error) {
       console.error(error);
