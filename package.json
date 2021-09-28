@@ -5,6 +5,7 @@
   "dependencies": {
     "@elrondnetwork/dapp": "^0.0.26",
     "@elrondnetwork/erdjs": "^6.5.1",
+    "@metamask/detect-provider": "^1.2.0",
     "@polkadot/extension-dapp": "^0.39.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

@@ -8,6 +8,7 @@ import { ChainConfig, ElrondDappConfig, CHAIN_INFO } from "../config";
 import { ethers, Wallet } from "ethers";
 import TronWeb from "tronweb";
 import { UserSigner } from "@elrondnetwork/erdjs/out";
+import detectEthereumProvider from "@metamask/detect-provider";
 
 /*const nft_info_encoded_t = new StructType('EncodedNft', [
     new StructFieldDefinition('token', '', new TokenIdentifierType()),
@@ -126,11 +127,7 @@ export function Web3Helper(chain) {
 
   async function requireWeb3() {
     if (!web3) {
-      web3Provider = ethers.providers.getDefaultProvider(
-        CHAIN_INFO[chain].rpcUrl
-      );
-      await web3Provider.ready;
-
+      web3Provider = await detectEthereumProvider();
       web3 = await baseWeb3HelperFactory(web3Provider);
     }
   }
