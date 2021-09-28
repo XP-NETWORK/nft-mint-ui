@@ -5,14 +5,14 @@ import ESDTTxnHandler from "./components/ESDTTxnHandler";
 export const routes = [
   {
     path: "/",
-    component: MintView
+    component: MintView,
   },
   {
     path: "/processelrd",
-    component: () => ElrondTxnHandler({ redirect: "/" })
+    component: () => ElrondTxnHandler({ redirect: "/" }),
   },
   {
     path: "/processesdt",
-    component: ESDTTxnHandler
-  }
-]
+    component: ESDTTxnHandler,
+  },
+];

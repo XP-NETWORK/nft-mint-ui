@@ -1,7 +1,11 @@
 import * as Elrond from "@elrondnetwork/dapp";
-import { ElrondDappConfig, walletConnectBridge, walletConnectDeepLink } from "./config";
+import {
+  ElrondDappConfig,
+  walletConnectBridge,
+  walletConnectDeepLink,
+} from "./config";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { routes } from "./routes"
+import { routes } from "./routes";
 import { ContextProvider } from "./context";
 import Layout from "./components/LoginLayout";
 
@@ -13,7 +17,7 @@ function App() {
           config={{
             network: ElrondDappConfig,
             walletConnectBridge,
-            walletConnectDeepLink
+            walletConnectDeepLink,
           }}
         >
           <Layout>
@@ -30,14 +34,12 @@ function App() {
                   />
                 )}
                 exact={true}
-                />
+              />
               <Route
                 path="/ledger"
-                component={() => (
-                  <Elrond.Pages.Ledger callbackRoute="/" />
-                )}
+                component={() => <Elrond.Pages.Ledger callbackRoute="/" />}
                 exact={true}
-                />
+              />
               <Route
                 path="/walletconnect"
                 component={() => (
@@ -64,7 +66,7 @@ function App() {
         </Elrond.Context>
       </ContextProvider>
     </Router>
-  )
+  );
 }
 
 export default App;

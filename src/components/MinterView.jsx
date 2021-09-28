@@ -6,7 +6,7 @@ import { Ledgers } from "../assets/data/ledgers";
 
 import PlokadotMintNftView from "./PolkadotMintNftView";
 import ElrondMintNftView from "./ElrondMintNftView";
-import XPWeb3MintView from './Web3MintView';
+import XPWeb3MintView from "./Web3MintView";
 import ESDTMint from "./ElrondESDTView";
 
 import { CHAIN_INFO, TronAccs } from "../config";
@@ -60,12 +60,11 @@ function MinterView() {
   const [esdtName, setEsdtName] = useState("");
   const [esdtTicker, setEsdtTicker] = useState("");
 
-
   // WEB3 COMPATIBLE (BSC, Ethereum, HECO)
-  const [web3MinterTokenID, setWeb3MinterTokenID] = useState('');
-  const [web3MinterOwnerAccount, setWeb3MinterOwnerAccount] = useState('');
-  const [web3MinterNFTName, setWeb3MinterNFTName] = useState('');
-  const [web3MinterAssetLInk, setWeb3MinterAssetLInk] = useState('');
+  const [web3MinterTokenID, setWeb3MinterTokenID] = useState("");
+  const [web3MinterOwnerAccount, setWeb3MinterOwnerAccount] = useState("");
+  const [web3MinterNFTName, setWeb3MinterNFTName] = useState("");
+  const [web3MinterAssetLInk, setWeb3MinterAssetLInk] = useState("");
 
   // ==================================================
   //                COMMON HANDLERS
@@ -82,20 +81,20 @@ function MinterView() {
     try {
       switch (ledger) {
         case Ledgers[0].label: {
-        const polka = await ChainFactory["XP.network"].inner();
-		    const signer = { sender: polkaAddress };
-        const encoder = new TextEncoder();
+          const polka = await ChainFactory["XP.network"].inner();
+          const signer = { sender: polkaAddress };
+          const encoder = new TextEncoder();
 
-        await postCreateNFT(
-          {
-            link: url,
-            name: name,
-            data: `${'XP.network'},${polkaAddress}`
-          },
-          (hash) => polka.mintNft(signer, encoder.encode(hash))
-        );
-        break;
-      }
+          await postCreateNFT(
+            {
+              link: url,
+              name: name,
+              data: `${"XP.network"},${polkaAddress}`,
+            },
+            (hash) => polka.mintNft(signer, encoder.encode(hash))
+          );
+          break;
+        }
         case Ledgers[1].label: {
           const elrd = await ChainFactory["Elrond"].inner();
 
@@ -125,8 +124,6 @@ function MinterView() {
         case Ledgers[2].label: {
           const elrd = await ChainFactory["Elrond"].inner();
           const txu = elrd.unsignedIssueESDTNft(esdtName, esdtTicker);
-
-
 
           sendElrdTx({
             transaction: txu,
@@ -265,35 +262,37 @@ function MinterView() {
     setUrl(e.target.value);
   };
 
-
   // ==================================================
   //              WEB3 HANDLERS
   // ==================================================
 
   const handleWeb3Click = async () => {
-
     setInactive(true);
     try {
-
       console.log("Create Item CLICK");
       const doc = {
         link: web3MinterAssetLInk,
         name: web3MinterNFTName,
         data: `${ledger},${CHAIN_INFO[ledger].contract},${web3MinterOwnerAccount},${web3MinterTokenID}`,
-        hash: `${web3MinterTokenID}`
-      }
+        hash: `${web3MinterTokenID}`,
+      };
 
-      console.log(doc)
+      console.log(doc);
 
-      await postCreateNFT(doc, async id => {
-
-        if( id){
-          const result = await mintWeb3NFT(ledger, web3MinterTokenID, web3MinterOwnerAccount, id);
-          console.log("MongoDB ObjectId:", id, "result", result)
-        }else{
-          console.error("The _id has not arrived or the object was not created")
+      await postCreateNFT(doc, async (id) => {
+        if (id) {
+          const result = await mintWeb3NFT(
+            ledger,
+            web3MinterTokenID,
+            web3MinterOwnerAccount,
+            id
+          );
+          console.log("MongoDB ObjectId:", id, "result", result);
+        } else {
+          console.error(
+            "The _id has not arrived or the object was not created"
+          );
         }
-        
       });
       setSuccess("success");
     } catch (error) {
@@ -304,10 +303,7 @@ function MinterView() {
         setInactive(false);
       }, 3000);
     }
-
-
-  }
-
+  };
 
   const onClickDeploy = async () => {
     const inner = await ChainFactory[ledger].inner();
@@ -315,7 +311,7 @@ function MinterView() {
     CHAIN_INFO[ledger].contract_owner = TronAccs.ACC1.key;
     CHAIN_INFO[ledger].contract = await inner.deployErc1155(TronAccs.ACC1.key);
     console.log("minter: ", CHAIN_INFO[ledger].contract);
-  }
+  };
 
   // ==================================================
   //                      J S X

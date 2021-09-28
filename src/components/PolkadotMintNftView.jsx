@@ -1,7 +1,6 @@
 import React from "react";
 import CreateButton from "./CreateButton";
 
-
 const PlokadotMintNftView = (props) => {
   return (
     <main>

@@ -1,35 +1,31 @@
-
-import React from 'react';
-import XPDropzone from './XPDropzone';
+import React from "react";
+import XPDropzone from "./XPDropzone";
 
 const ElrondMintNftView = (props) => {
+  return (
+    <main>
+      <h2>Create a collectible</h2>
 
-    return (
-        <main>
+      <div className="group-container">
+        <div className="bold-label">Collectible Name</div>
+        <input
+          value={props.value}
+          onChange={props.handleChangeTitle}
+          placeholder=""
+        />
+      </div>
 
-            <h2>Create a collectible</h2>
+      <div className="group-container">
+        <div className="bold-label">Description</div>
+        <textarea
+          rows={props.descrRows}
+          value={props.description}
+          onChange={props.handleChangeDescription}
+          placeholder="Arbitrary field, 140 characters max."
+        />
+      </div>
 
-            <div className="group-container">
-                <div
-                    className="bold-label"
-                >Collectible Name</div>
-                <input
-                    value={props.value}
-                    onChange={props.handleChangeTitle}
-                    placeholder="" />
-            </div>
-
-            <div className="group-container">
-                <div className="bold-label">Description</div>
-                <textarea
-                    rows={props.descrRows}
-                    value={props.description}
-                    onChange={props.handleChangeDescription}
-                    placeholder="Arbitrary field, 140 characters max."
-                />
-            </div>
-
-            {/* <div className="row-container">
+      {/* <div className="row-container">
                 <span>
                     <span className="bold-label">Royalties</span>
                     <input
@@ -52,34 +48,29 @@ const ElrondMintNftView = (props) => {
                 </span>
             </div> */}
 
-            <div className="group-container">
-                <div
-                    className="bold-label"
-                >URI</div>
-                <input
-                    className="bold-label"
-                    value={props.uri}
-                    onChange={props.handleChangeUri}
-                    placeholder="https://link.to.nft" />
-            </div>
+      <div className="group-container">
+        <div className="bold-label">URI</div>
+        <input
+          className="bold-label"
+          value={props.uri}
+          onChange={props.handleChangeUri}
+          placeholder="https://link.to.nft"
+        />
+      </div>
 
-            <div className="group-container">
-                <div className="dotted-frame">
-                    <XPDropzone
-                        onChange={props.onChange}
-                    />
-                </div>
-            </div>
+      <div className="group-container">
+        <div className="dotted-frame">
+          <XPDropzone onChange={props.onChange} />
+        </div>
+      </div>
 
-            <div className="group-container">
-                <button
-                    onClick={props.onClick}
-                    className="xp-button">Create item</button>
-            </div>
-
-
-        </main>
-    )
-}
+      <div className="group-container">
+        <button onClick={props.onClick} className="xp-button">
+          Create item
+        </button>
+      </div>
+    </main>
+  );
+};
 
 export default ElrondMintNftView;

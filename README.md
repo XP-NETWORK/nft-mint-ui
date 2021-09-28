@@ -1,5 +1,7 @@
 # XP.network NFT Minting UI
+
 This is the user interface for minting ERC-721 tokens on the XP.network blockchain.
+
 ## Available Scripts
 
 In the project directory, you can run:

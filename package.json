@@ -12,6 +12,7 @@
     "chroma-js": "^2.1.2",
     "ethers": "^5.4.5",
     "moment": "^2.29.1",
+    "nft.storage": "^3.2.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.4",

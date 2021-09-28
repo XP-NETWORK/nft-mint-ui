@@ -10,7 +10,7 @@ const SVGContainer = styled("div")`
 `;
 
 const ChevronDown = () => {
-      return (
+  return (
     <SVGContainer>
       <svg
         width="10"
