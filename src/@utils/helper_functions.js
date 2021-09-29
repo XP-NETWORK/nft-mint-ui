@@ -156,39 +156,40 @@ export const Web3Helper = () => {
       return new Wallet(pk, web3Provider);
     },
     async setWeb3Chain(chain) {
-        await requireWeb3();
+      await requireWeb3();
 
-        const info = CHAIN_INFO[chain];
-        const chainId = `0x${info.chainId.toString(16)}`;
-        try {
+      const info = CHAIN_INFO[chain];
+      const chainId = `0x${info.chainId.toString(16)}`;
+      try {
+        await web3Provider.provider.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId }],
+        });
+      } catch (err) {
+        if (err.code === 4902) {
           await web3Provider.provider.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId }],
-          });
-        } catch (err) {
-          if (err.code === 4902) {
-            await web3Provider.provider.request({
-              method: "wallet_addEthereumChain",
-              params: [
-                {
-                  chainId,
-                  chainName: info.chainId,
-                  nativeCurrency: {
-                    name: info.native,
-                    symbol: info.native,
-                  },
-                  rpcUrls: [info.rpcUrl],
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId,
+                chainName: chain,
+                nativeCurrency: {
+                  name: info.native,
+                  symbol: info.native,
+                  decimals: Math.log10(info.decimals),
                 },
-              ],
-            });
-          }
+                rpcUrls: [info.rpcUrl],
+              },
+            ],
+          });
         }
+      }
     },
     async listAccounts() {
-        await requireWeb3();
+      await requireWeb3();
 
-        return await this.web3Provider.listAccounts()
-    }
+      return await web3Provider.listAccounts();
+    },
   };
 };
 
@@ -223,7 +224,7 @@ export function TronHelper() {
 export const ChainFactory = {
   "XP.network": PolkadotHelper(),
   Elrond: ElrondHelper(),
-  Web3: Web3Helper()
+  Web3: Web3Helper(),
 };
 
 /**

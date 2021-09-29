@@ -37,7 +37,12 @@ function MinterView() {
 
   useEffect(() => {
     if (!ChainFactory[ledger]) {
-      ChainFactory.Web3.setWeb3Chain(ledger)
+      ChainFactory.Web3.setWeb3Chain(ledger).then(() => {
+        ChainFactory.Web3.listAccounts().then((a) => {
+          console.log(a[0]);
+          setSelectedAccount(a[0]);
+        });
+      });
     }
   }, [ledger]);
 
@@ -245,6 +250,7 @@ function MinterView() {
    */
   const handleChangeLedger = (o) => {
     const val = o.label;
+
     setLedger(val);
   };
 
@@ -305,14 +311,6 @@ function MinterView() {
           },
         ],
       });
-
-      // const doc = {
-      //   link: web3MinterAssetLInk,
-      //   name: web3MinterNFTName,
-      //   data: `${ledger},${CHAIN_INFO[ledger].contract},${web3MinterOwnerAccount},${web3MinterTokenID}`,
-      //   hash: `${web3MinterTokenID}`,
-      // };
-
       console.log(metadata);
       const result = await mintWeb3NFT(
         ledger,
@@ -339,18 +337,8 @@ function MinterView() {
     CHAIN_INFO[ledger].contract = await inner.deployErc1155(TronAccs.ACC1.key);
     console.log("minter: ", CHAIN_INFO[ledger].contract);
   };
-  const [connected, setConnected] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState("");
-  useEffect(() => {
-    window.ethereum.on("accountsChanged", (acc) => {
-      if (acc.length !== 0 && acc[0] !== selectedAccount) {
-        setSelectedAccount(acc[0]);
-      }
-    });
-    window.ethereum.on("chainChanged", (c) => {
-      console.log(c);
-    });
-  });
+
   // ==================================================
   //                      J S X
   // ==================================================
@@ -361,27 +349,7 @@ function MinterView() {
         <XPLogo />
         <XPSelect value={ledger} onChange={handleChangeLedger} />
       </header>
-      {!connected && (
-        <button
-          onClick={async () => {
-            try {
-              const accounts = await window.ethereum.request({
-                method: "eth_requestAccounts",
-              });
-              setSelectedAccount(accounts[0]);
-              setConnected(true);
-              console.log(
-                await window.ethereum.request({ method: "eth_chainId" })
-              );
-            } catch (e) {
-              e.code === 4001 ? alert("User denied account access") : alert(e);
-            }
-          }}
-        >
-          Connect to Metamask
-        </button>
-      )}
-      {connected && <p>Using account: {selectedAccount} </p>}
+      <p>Using account: {selectedAccount} </p>
       {ledger && ledger === Ledgers[0].label ? (
         <PlokadotMintNftView
           inactive={inactive}
