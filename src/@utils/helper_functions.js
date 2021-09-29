@@ -127,7 +127,10 @@ export function Web3Helper(chain) {
 
   async function requireWeb3() {
     if (!web3) {
-      web3Provider = await detectEthereumProvider();
+      web3Provider = ethers.providers.getDefaultProvider(
+        CHAIN_INFO[chain].rpcUrl
+      );
+      await web3Provider.ready;
       web3 = await baseWeb3HelperFactory(web3Provider);
     }
   }
@@ -234,9 +237,12 @@ export const ChainFactory = {
  * @param {string} uri - the info linked to the token
  */
 export const mintWeb3NFT = async (chain, token, owner, uri) => {
+  console.log(chain, token, owner, uri);
   const contract = CHAIN_INFO[chain].contract;
+  console.log(contract);
   const helper = ChainFactory["Web3"];
   const inner = await helper.inner();
+  console.log(inner);
 
   await inner.mintNft(
     await helper.signerFromPk(CHAIN_INFO[chain].contract_owner),

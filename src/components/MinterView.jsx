@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useWindowSize } from "../@utils/hooks";
 import XPLogo from "../assets/SVG/XPLogo";
 import XPSelect from "./XPSelect";
@@ -267,6 +267,23 @@ function MinterView() {
     setUrl(e.target.value);
   };
 
+  useEffect(() => {
+    (async () => {
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setSelectedAccount(accounts[0]);
+    })();
+  }, []);
+
+  useEffect(() => {
+    window.ethereum.on("accountsChanged", (a) => {
+      setSelectedAccount(a[0]);
+    });
+  }, []);
+
+  const [selectedAccount, setSelectedAccount] = useState("");
+
   // ==================================================
   //              WEB3 HANDLERS
   // ==================================================
@@ -329,6 +346,7 @@ function MinterView() {
 
         <XPSelect value={ledger} onChange={handleChangeLedger} />
       </header>
+      <p>Using Account: {selectedAccount}</p>
       {ledger && ledger === Ledgers[0].label ? (
         <PlokadotMintNftView
           inactive={inactive}
