@@ -54,7 +54,7 @@ export const TronAccs = {
 };
 
 export const chains = [
-  "XP.network", // 0
+  // "XP.network", // 0
   "BSC", // 1
   "Elrond", // 2
   "HECO", // 3
@@ -65,7 +65,7 @@ export const chains = [
 ];
 
 export const coins = [
-  "XPNET", // 0
+  // "XPNET", // 0
   "BNB", // 1
   "eGLD", // 2
   "HT", // 3
@@ -73,7 +73,7 @@ export const coins = [
 ];
 
 export const CHAIN_INFO = {
-  "XP.network": { nonce: 1, native: "XPNET", decimals: 1e12 },
+  // "XP.network": { nonce: 1, native: "XPNET", decimals: 1e12 },
   Elrond: { nonce: 2, native: "EGLD", decimals: 1e18 },
   HECO: {
     nonce: 3,

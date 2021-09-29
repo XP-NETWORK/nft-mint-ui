@@ -116,18 +116,50 @@ export function ElrondHelper() {
   };
 }
 
+export const setWeb3Chain = async (chain) => {
+  const { ethereum } = window;
+  const info = CHAIN_INFO[chain];
+  try {
+    await ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chain }],
+    });
+  } catch (err) {
+    if (err.code === 4902) {
+      await ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: info.chainId,
+            chainName: info.chainId,
+            nativeCurrency: {
+              name: info.native,
+              symbol: info.native,
+            },
+            rpcUrls: [info.rpcUrl],
+          },
+        ],
+      });
+    }
+  }
+};
+
 /**
  * Wrapper over Web3Helper from testsuite-ts
  *
  * @param {string} chain identifier of the web3 chain
  */
-export function Web3Helper(chain) {
+export const Web3Helper = (chain) => {
   let web3 = undefined;
   let web3Provider = undefined;
 
   async function requireWeb3() {
+    if (!web3Provider) {
+      const web = await detectEthereumProvider();
+      web3Provider = new ethers.providers.Web3Provider(web);
+    }
     if (!web3) {
-      web3Provider = await detectEthereumProvider();
+      await setWeb3Chain(chain);
       web3 = await baseWeb3HelperFactory(web3Provider);
     }
   }
@@ -154,7 +186,7 @@ export function Web3Helper(chain) {
       return new Wallet(pk, web3Provider);
     },
   };
-}
+};
 
 export function TronHelper() {
   let tronWeb = undefined;
@@ -185,7 +217,6 @@ export function TronHelper() {
  * Factories for Chains by Chain Name
  */
 export const ChainFactory = {
-  "XP.network": PolkadotHelper(),
   Elrond: ElrondHelper(),
   HECO: Web3Helper("HECO"),
   BSC: Web3Helper("BSC"),

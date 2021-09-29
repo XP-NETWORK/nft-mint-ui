@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useWindowSize } from "../@utils/hooks";
 import XPLogo from "../assets/SVG/XPLogo";
 import XPSelect from "./XPSelect";
@@ -12,7 +12,11 @@ import { NFTStorage } from "nft.storage";
 import ESDTMint from "./ElrondESDTView";
 
 import { CHAIN_INFO, TronAccs } from "../config";
-import { ChainFactory, mintWeb3NFT } from "../@utils/helper_functions";
+import {
+  ChainFactory,
+  mintWeb3NFT,
+  Web3Helper,
+} from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import * as Erdjs from "@elrondnetwork/erdjs/out";
 import { postCreateNFT } from "../@utils/createNFT";
@@ -30,6 +34,15 @@ function MinterView() {
   // ==============================================================
 
   const [ledger, setLedger] = useState(Ledgers[0].label);
+
+  useEffect(() => {
+    switch(ledger) {
+      case Ledgers[]
+    }
+    (async () => {
+      await Web3Helper(ledger).inner();
+    })();
+  }, [ledger]);
 
   // POLKADOT STATE
   const [polkaAddress, setPolkaAddress] = useState("");
@@ -329,7 +342,18 @@ function MinterView() {
     CHAIN_INFO[ledger].contract = await inner.deployErc1155(TronAccs.ACC1.key);
     console.log("minter: ", CHAIN_INFO[ledger].contract);
   };
-
+  const [connected, setConnected] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState("");
+  useEffect(() => {
+    window.ethereum.on("accountsChanged", (acc) => {
+      if (acc.length !== 0 && acc[0] !== selectedAccount) {
+        setSelectedAccount(acc[0]);
+      }
+    });
+    window.ethereum.on("chainChanged", (c) => {
+      console.log(c);
+    });
+  });
   // ==================================================
   //                      J S X
   // ==================================================
@@ -338,10 +362,29 @@ function MinterView() {
     <div className="App">
       <header>
         <XPLogo />
-
         <XPSelect value={ledger} onChange={handleChangeLedger} />
       </header>
-
+      {!connected && (
+        <button
+          onClick={async () => {
+            try {
+              const accounts = await window.ethereum.request({
+                method: "eth_requestAccounts",
+              });
+              setSelectedAccount(accounts[0]);
+              setConnected(true);
+              console.log(
+                await window.ethereum.request({ method: "eth_chainId" })
+              );
+            } catch (e) {
+              e.code === 4001 ? alert("User denied account access") : alert(e);
+            }
+          }}
+        >
+          Connect to Metamask
+        </button>
+      )}
+      {connected && <p>Using account: {selectedAccount} </p>}
       {ledger && ledger === Ledgers[0].label ? (
         <PlokadotMintNftView
           inactive={inactive}
