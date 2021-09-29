@@ -8,7 +8,6 @@ import { ChainConfig, ElrondDappConfig, CHAIN_INFO } from "../config";
 import { ethers, Wallet } from "ethers";
 import TronWeb from "tronweb";
 import { UserSigner } from "@elrondnetwork/erdjs/out";
-import detectEthereumProvider from "@metamask/detect-provider";
 
 /*const nft_info_encoded_t = new StructType('EncodedNft', [
     new StructFieldDefinition('token', '', new TokenIdentifierType()),
@@ -224,6 +223,13 @@ export function TronHelper() {
 export const ChainFactory = {
   "XP.network": PolkadotHelper(),
   Elrond: ElrondHelper(),
+  HECO: Web3Helper("HECO"),
+  BSC: Web3Helper("BSC"),
+  Ropsten: Web3Helper("Ropsten"),
+  Avalanche: Web3Helper("Avalanche"),
+  Polygon: Web3Helper("Polygon"),
+  Fantom: Web3Helper("Fantom"),
+  Tron: TronHelper(),
   Web3: Web3Helper(),
 };
 
@@ -237,12 +243,9 @@ export const ChainFactory = {
  * @param {string} uri - the info linked to the token
  */
 export const mintWeb3NFT = async (chain, token, owner, uri) => {
-  console.log(chain, token, owner, uri);
   const contract = CHAIN_INFO[chain].contract;
-  console.log(contract);
-  const helper = ChainFactory["Web3"];
+  const helper = ChainFactory[chain];
   const inner = await helper.inner();
-  console.log(inner);
 
   await inner.mintNft(
     await helper.signerFromPk(CHAIN_INFO[chain].contract_owner),

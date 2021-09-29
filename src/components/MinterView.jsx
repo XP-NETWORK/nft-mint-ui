@@ -296,6 +296,7 @@ function MinterView() {
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDI5NjBBNTgxOWYyZDRmMzE0NWE4NjBhMGVCZTdGRTc0NGREOTBkRTciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzMjgyMDczMjA0MywibmFtZSI6IlRlc3RpbmdLZXkifQ.AyWHqtG3vRe_UUx0ht4EOv7sxbVPGD0ZmxQ6UD8BrKA";
       const storage = new NFTStorage({ endpoint, token });
       console.log("Create Item CLICK");
+      console.log(web3MinterAssetBlob);
       const metadata = await storage.store({
         name: web3MinterAssetName,
         description: web3MinterAssetDescription,
