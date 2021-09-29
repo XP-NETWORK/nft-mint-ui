@@ -121,16 +121,13 @@ export function ElrondHelper() {
  *
  * @param {string} chain identifier of the web3 chain
  */
-export const Web3Helper = () => {
+export function Web3Helper(chain) {
   let web3 = undefined;
   let web3Provider = undefined;
 
   async function requireWeb3() {
-    if (!web3Provider) {
-      const web = await detectEthereumProvider();
-      web3Provider = new ethers.providers.Web3Provider(web);
-    }
     if (!web3) {
+      web3Provider = await detectEthereumProvider();
       web3 = await baseWeb3HelperFactory(web3Provider);
     }
   }
@@ -191,7 +188,7 @@ export const Web3Helper = () => {
       return await web3Provider.listAccounts();
     },
   };
-};
+}
 
 export function TronHelper() {
   let tronWeb = undefined;

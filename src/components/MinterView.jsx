@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useWindowSize } from "../@utils/hooks";
 import XPLogo from "../assets/SVG/XPLogo";
 import XPSelect from "./XPSelect";
@@ -12,11 +12,7 @@ import { NFTStorage } from "nft.storage";
 import ESDTMint from "./ElrondESDTView";
 
 import { CHAIN_INFO, TronAccs } from "../config";
-import {
-  ChainFactory,
-  mintWeb3NFT,
-  Web3Helper,
-} from "../@utils/helper_functions";
+import { ChainFactory, mintWeb3NFT } from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import * as Erdjs from "@elrondnetwork/erdjs/out";
 import { postCreateNFT } from "../@utils/createNFT";
@@ -34,17 +30,6 @@ function MinterView() {
   // ==============================================================
 
   const [ledger, setLedger] = useState(Ledgers[0].label);
-
-  useEffect(() => {
-    if (!ChainFactory[ledger]) {
-      ChainFactory.Web3.setWeb3Chain(ledger).then(() => {
-        ChainFactory.Web3.listAccounts().then((a) => {
-          console.log(a[0]);
-          setSelectedAccount(a[0]);
-        });
-      });
-    }
-  }, [ledger]);
 
   // POLKADOT STATE
   const [polkaAddress, setPolkaAddress] = useState("");
@@ -332,7 +317,6 @@ function MinterView() {
     CHAIN_INFO[ledger].contract = await inner.deployErc1155(TronAccs.ACC1.key);
     console.log("minter: ", CHAIN_INFO[ledger].contract);
   };
-  const [selectedAccount, setSelectedAccount] = useState("");
 
   // ==================================================
   //                      J S X
@@ -342,9 +326,9 @@ function MinterView() {
     <div className="App">
       <header>
         <XPLogo />
+
         <XPSelect value={ledger} onChange={handleChangeLedger} />
       </header>
-      <p>Using account: {selectedAccount} </p>
       {ledger && ledger === Ledgers[0].label ? (
         <PlokadotMintNftView
           inactive={inactive}
