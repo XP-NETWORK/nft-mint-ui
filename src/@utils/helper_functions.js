@@ -238,7 +238,7 @@ export const ChainFactory = {
  */
 export const mintWeb3NFT = async (chain, token, owner, uri) => {
   const contract = CHAIN_INFO[chain].contract;
-  const helper = ChainFactory[chain];
+  const helper = ChainFactory["Web3"];
   const inner = await helper.inner();
 
   await inner.mintNft(

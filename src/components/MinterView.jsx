@@ -79,9 +79,11 @@ function MinterView() {
 
   // WEB3 COMPATIBLE (BSC, Ethereum, HECO)
   const [web3MinterTokenID, setWeb3MinterTokenID] = useState("");
-  const [web3MinterOwnerAccount, setWeb3MinterOwnerAccount] = useState("");
-  const [web3MinterNFTName, setWeb3MinterNFTName] = useState("");
-  const [web3MinterAssetLInk, setWeb3MinterAssetLInk] = useState("");
+  const [web3MinterAssetName, setWeb3MinterAssetName] = useState("");
+  const [web3MinterAssetDescription, setWeb3MinterAssetDescription] = useState(
+    ""
+  );
+  const [web3MinterAssetBlob, setWeb3MinterAssetBlob] = useState(null);
 
   // ==================================================
   //                COMMON HANDLERS
@@ -288,21 +290,14 @@ function MinterView() {
     setInactive(true);
     try {
       const endpoint = "https://api.nft.storage";
-      const token = process.env.KEY;
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDI5NjBBNTgxOWYyZDRmMzE0NWE4NjBhMGVCZTdGRTc0NGREOTBkRTciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzMjgyMDczMjA0MywibmFtZSI6IlRlc3RpbmdLZXkifQ.AyWHqtG3vRe_UUx0ht4EOv7sxbVPGD0ZmxQ6UD8BrKA";
       const storage = new NFTStorage({ endpoint, token });
       console.log("Create Item CLICK");
       const metadata = await storage.store({
-        name: web3MinterNFTName,
-        description: "A really cool test NFT",
-        image: web3MinterAssetLInk,
-        // Use the file from the input instead.
-        // new File(
-        //   [await fs.promises.readFile("OutOfEarth.png")],
-        //   "OutOfEarth.jpg",
-        //   {
-        //     type: "image/png",
-        //   }
-        // )
+        name: web3MinterAssetName,
+        description: web3MinterAssetDescription,
+        image: web3MinterAssetBlob,
         attributes: [
           {
             display_type: "date",
@@ -315,7 +310,7 @@ function MinterView() {
       const result = await mintWeb3NFT(
         ledger,
         web3MinterTokenID,
-        web3MinterOwnerAccount,
+        selectedAccount,
         metadata.url
       );
       console.log("Metadata Url:", metadata.url, "result", result);
@@ -399,12 +394,12 @@ function MinterView() {
         <XPWeb3MintView
           web3MinterTokenID={web3MinterTokenID}
           setWeb3MinterTokenID={setWeb3MinterTokenID}
-          web3MinterOwnerAccount={web3MinterOwnerAccount}
-          setWeb3MinterOwnerAccount={setWeb3MinterOwnerAccount}
-          web3MinterNFTName={web3MinterNFTName}
-          setWeb3MinterNFTName={setWeb3MinterNFTName}
-          web3MinterAssetLInk={web3MinterAssetLInk}
-          setWeb3MinterAssetLInk={setWeb3MinterAssetLInk}
+          web3MinterAssetName={web3MinterAssetName}
+          setWeb3MinterAssetName={setWeb3MinterAssetName}
+          web3MinterAssetDescription={web3MinterAssetDescription}
+          setWeb3MinterAssetDescription={setWeb3MinterAssetDescription}
+          web3MinterAssetBlob={web3MinterAssetBlob}
+          setWeb3MinterAssetBlob={setWeb3MinterAssetBlob}
           inactive={inactive}
           success={success}
           onClick={handleWeb3Click}
