@@ -36,12 +36,9 @@ function MinterView() {
   const [ledger, setLedger] = useState(Ledgers[0].label);
 
   useEffect(() => {
-    switch(ledger) {
-      case Ledgers[]
+    if (!ChainFactory[ledger]) {
+      ChainFactory.Web3.setWeb3Chain(ledger)
     }
-    (async () => {
-      await Web3Helper(ledger).inner();
-    })();
   }, [ledger]);
 
   // POLKADOT STATE

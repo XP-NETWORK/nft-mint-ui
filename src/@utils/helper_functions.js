@@ -116,40 +116,12 @@ export function ElrondHelper() {
   };
 }
 
-export const setWeb3Chain = async (chain) => {
-  const { ethereum } = window;
-  const info = CHAIN_INFO[chain];
-  try {
-    await ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chain }],
-    });
-  } catch (err) {
-    if (err.code === 4902) {
-      await ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: info.chainId,
-            chainName: info.chainId,
-            nativeCurrency: {
-              name: info.native,
-              symbol: info.native,
-            },
-            rpcUrls: [info.rpcUrl],
-          },
-        ],
-      });
-    }
-  }
-};
-
 /**
  * Wrapper over Web3Helper from testsuite-ts
  *
  * @param {string} chain identifier of the web3 chain
  */
-export const Web3Helper = (chain) => {
+export const Web3Helper = () => {
   let web3 = undefined;
   let web3Provider = undefined;
 
@@ -159,13 +131,11 @@ export const Web3Helper = (chain) => {
       web3Provider = new ethers.providers.Web3Provider(web);
     }
     if (!web3) {
-      await setWeb3Chain(chain);
       web3 = await baseWeb3HelperFactory(web3Provider);
     }
   }
 
   return {
-    ident: chain,
     /**
      * @returns Inner Web3Helper from testsuite-ts
      */
@@ -185,6 +155,40 @@ export const Web3Helper = (chain) => {
 
       return new Wallet(pk, web3Provider);
     },
+    async setWeb3Chain(chain) {
+        await requireWeb3();
+
+        const info = CHAIN_INFO[chain];
+        const chainId = `0x${info.chainId.toString(16)}`;
+        try {
+          await web3Provider.provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId }],
+          });
+        } catch (err) {
+          if (err.code === 4902) {
+            await web3Provider.provider.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId,
+                  chainName: info.chainId,
+                  nativeCurrency: {
+                    name: info.native,
+                    symbol: info.native,
+                  },
+                  rpcUrls: [info.rpcUrl],
+                },
+              ],
+            });
+          }
+        }
+    },
+    async listAccounts() {
+        await requireWeb3();
+
+        return await this.web3Provider.listAccounts()
+    }
   };
 };
 
@@ -217,14 +221,9 @@ export function TronHelper() {
  * Factories for Chains by Chain Name
  */
 export const ChainFactory = {
+  "XP.network": PolkadotHelper(),
   Elrond: ElrondHelper(),
-  HECO: Web3Helper("HECO"),
-  BSC: Web3Helper("BSC"),
-  Ropsten: Web3Helper("Ropsten"),
-  Avalanche: Web3Helper("Avalanche"),
-  Polygon: Web3Helper("Polygon"),
-  Fantom: Web3Helper("Fantom"),
-  Tron: TronHelper(),
+  Web3: Web3Helper()
 };
 
 /**

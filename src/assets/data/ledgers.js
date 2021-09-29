@@ -3,7 +3,7 @@ export const Ledgers = [
   { value: "Elrond", label: "Elrond" },
   { value: "ESDT", label: "ESDT" },
   { value: "HECO", label: "HECO" },
-  { value: "Ethereum", label: "Ethereum" },
+  { value: "Ethereum", label: "Ropsten" },
   { value: "BSC", label: "BSC" },
   { value: "Fantom", label: "Fantom" },
   { value: "Polygon", label: "Polygon" },
