@@ -221,7 +221,6 @@ export function TronHelper() {
  * Factories for Chains by Chain Name
  */
 export const ChainFactory = {
-  "XP.network": PolkadotHelper(),
   Elrond: ElrondHelper(),
   HECO: Web3Helper("HECO"),
   BSC: Web3Helper("BSC"),
