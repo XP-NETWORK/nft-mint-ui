@@ -92,8 +92,8 @@ export const CHAIN_INFO = {
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     decimals: 1e18,
     contract_owner:
-      "0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
-    contract: "0x5b5C8b16937F60D02aFaC76bf6614c33911636FC",
+      "0x5dca57fe4b6ed2572052efa01b37cc7e20ec1eee3dc3088ca0f5ebb59f875756",
+    contract: "0x1d63023D01b9E09267245eAC3710C6efb01Fc715",
   },
   Ropsten: {
     nonce: 5,
@@ -113,7 +113,14 @@ export const CHAIN_INFO = {
       "0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
     contract: "0xB0cA1d0424975EA639579BA72f4E5935391c7b4e",
   },
-  Polygon: {},
+  Polygon: {
+    nonce: 0x7,
+    rpcUrl: "https://matic-testnet-archive-rpc.bwarelabs.com",
+    decimals: 1e18,
+    contract_owner:
+      "0x5dca57fe4b6ed2572052efa01b37cc7e20ec1eee3dc3088ca0f5ebb59f875756",
+    contract: "0x8Ae6d528c608C7a11485105D56BA3b67518bc060",
+  },
   Tron: {
     nonce: 0x9,
     rpcUrl: "https://api.shasta.trongrid.io/",
