@@ -153,7 +153,7 @@ export const Web3Helper = () => {
     async signerFromPk(pk) {
       await requireWeb3();
 
-      return new Wallet(pk, web3Provider);
+      return await web3Provider.getSigner(pk);
     },
     async setWeb3Chain(chain) {
       await requireWeb3();
@@ -241,13 +241,9 @@ export const mintWeb3NFT = async (chain, token, owner, uri) => {
   const helper = ChainFactory["Web3"];
   const inner = await helper.inner();
 
-  await inner.mintNft(
-    await helper.signerFromPk(CHAIN_INFO[chain].contract_owner),
-    {
-      contract,
-      token,
-      owner,
-      uri,
-    }
-  );
+  await inner.mintNft(await helper.signerFromPk(owner), {
+    contract,
+    token,
+    uri,
+  });
 };

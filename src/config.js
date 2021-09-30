@@ -93,7 +93,7 @@ export const CHAIN_INFO = {
     decimals: 1e18,
     contract_owner:
       "0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
-    contract: "0x5b5C8b16937F60D02aFaC76bf6614c33911636FC",
+    contract: "0xa53A92E7c9D55E1c60574c486B31931BF9E3A936",
   },
   Ropsten: {
     nonce: 5,

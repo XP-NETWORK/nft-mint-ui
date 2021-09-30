@@ -333,6 +333,17 @@ function MinterView() {
     console.log("minter: ", CHAIN_INFO[ledger].contract);
   };
   const [selectedAccount, setSelectedAccount] = useState("");
+  useEffect(() => {
+    (async () => {
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setSelectedAccount(accounts[0]);
+    })();
+    window.ethereum.on("accountsChanged", (a) => {
+      setSelectedAccount(a[0]);
+    });
+  }, []);
 
   // ==================================================
   //                      J S X
