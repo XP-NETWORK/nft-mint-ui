@@ -81,9 +81,7 @@ export const CHAIN_INFO = {
     chainId: 256,
     rpcUrl: "https://http-testnet.hecochain.com",
     decimals: 1e18,
-    contract_owner:
-      "0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
-    contract: "0x8b9c95147C185A9d0940DC26a6EA774eE05D8853",
+    contract: "0xd14fcb5Ee60D28a596712139c8d50F3ec3E22752",
   },
   BSC: {
     nonce: 4,
@@ -91,9 +89,7 @@ export const CHAIN_INFO = {
     chainId: 97,
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     decimals: 1e18,
-    contract_owner:
-      "0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
-    contract: "0xa53A92E7c9D55E1c60574c486B31931BF9E3A936",
+    contract: "0x9578048D744DA9b23Ce242FE997E553B44b4cFea",
   },
   Ropsten: {
     nonce: 5,
@@ -101,25 +97,26 @@ export const CHAIN_INFO = {
     chainId: 3,
     rpcUrl: "https://ropsten.infura.io/v3/182b3d3fb2d14d5fbe7421348624d1ce",
     decimals: 1e18,
-    contract_owner:
-      "0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
-    contract: "0xf6fceC833bFb9bd26a898143A6b41799F5Abfe0f",
+    contract: "0xaFDa6bA629Cf0Df5e097C6428e911CdB985bBe49",
   },
   Fantom: {
     nonce: 0x8,
     rpcUrl: "https://rpc.testnet.fantom.network/",
     decimals: 1e18,
-    contract_owner:
-      "0xbaedb25b3352638942e80aa3dbc2d54f2bab423849cce21a73c164f0c21103c8",
-    contract: "0xB0cA1d0424975EA639579BA72f4E5935391c7b4e",
+    chainId: 4002,
+    contract: "0x799c5AC3dFd79Ec28F92A6b54369B0AF057e39Bd",
   },
-  Polygon: {},
+  Polygon: {
+    nonce: 0x6,
+    chainId: 80001,
+    decimals: 1e18,
+    rpcUrl: "https://matic-testnet-archive-rpc.bwarelabs.com",
+    contract: "0x8A2E131856a7724a780Bd13d36559852F4e76088",
+  },
   Tron: {
     nonce: 0x9,
     rpcUrl: "https://api.shasta.trongrid.io/",
     decimals: 1e6,
-    contract_owner:
-      "991EE549C12DA5EC5AF246FB0733A334CB918D3A28D91DC4FEA19BAB7D3FFA8A",
     contract: "417cc883b5da914678e0ac952d954adaa37156721d",
   },
 };
