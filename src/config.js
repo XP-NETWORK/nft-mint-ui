@@ -170,6 +170,6 @@ export const CHAIN_INFO = {
     rpcUrl: "https://testing-bridge.xp.network/ontio",
     chainId: 5851,
     blockExplorerUrls: "https://explorer.ont.io/testnet/tx",
-    contract: "//TODO//",
+    contract: "0x976cd640fB7710f07e9B8E94322a9E942C614aeA",
   },
 };
