@@ -179,6 +179,7 @@ export const Web3Helper = () => {
                   decimals: Math.log10(info.decimals),
                 },
                 rpcUrls: [info.rpcUrl],
+                blockExplorerUrls: [info.blockExplorerUrls],
               },
             ],
           });
