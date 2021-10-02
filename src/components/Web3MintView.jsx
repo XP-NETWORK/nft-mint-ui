@@ -29,7 +29,7 @@ const XPWeb3MintView = (props) => {
               e.target.value.replace(/(?:\r\n|\r|\n)/g, "")
             )
           }
-          placeholder="Account address"
+          placeholder="(eg. Fight Punks)"
         />
       </div>
 
@@ -42,7 +42,7 @@ const XPWeb3MintView = (props) => {
               e.target.value.replace(/(?:\r\n|\r|\n)/g, "")
             )
           }
-          placeholder="Description"
+          placeholder="Describe your NFT"
         />
       </div>
 

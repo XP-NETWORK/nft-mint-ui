@@ -5,7 +5,7 @@ import {
   baseTronHelperFactory,
 } from "testsuite-ts";
 import { ChainConfig, ElrondDappConfig, CHAIN_INFO } from "../config";
-import { ethers, Wallet } from "ethers";
+import { ethers } from "ethers";
 import TronWeb from "tronweb";
 import { UserSigner } from "@elrondnetwork/erdjs/out";
 import detectEthereumProvider from "@metamask/detect-provider";

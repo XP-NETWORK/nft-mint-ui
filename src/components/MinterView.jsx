@@ -12,11 +12,7 @@ import { NFTStorage } from "nft.storage";
 import ESDTMint from "./ElrondESDTView";
 
 import { CHAIN_INFO, TronAccs } from "../config";
-import {
-  ChainFactory,
-  mintWeb3NFT,
-  Web3Helper,
-} from "../@utils/helper_functions";
+import { ChainFactory, mintWeb3NFT } from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import * as Erdjs from "@elrondnetwork/erdjs/out";
 import { postCreateNFT } from "../@utils/createNFT";
@@ -342,6 +338,9 @@ function MinterView() {
     })();
     window.ethereum.on("accountsChanged", (a) => {
       setSelectedAccount(a[0]);
+    });
+    window.ethereum.on("chainChanged", (a) => {
+      window.location.reload();
     });
   }, []);
 
