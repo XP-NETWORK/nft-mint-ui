@@ -89,7 +89,7 @@ export const CHAIN_INFO = {
     chainId: 256,
     rpcUrl: "https://http-testnet.hecochain.com",
     decimals: 1e18,
-    contract: "0xd14fcb5Ee60D28a596712139c8d50F3ec3E22752",
+    contract: "0xC77a75484821f04273D3A6968e63390DC846Dcc5",
     blockExplorerUrls: "https://testnet.hecoinfo.com/tx",
   },
   BSC: {
@@ -107,7 +107,7 @@ export const CHAIN_INFO = {
     chainId: 3,
     rpcUrl: "https://ropsten.infura.io/v3/182b3d3fb2d14d5fbe7421348624d1ce",
     decimals: 1e18,
-    contract: "0xaFDa6bA629Cf0Df5e097C6428e911CdB985bBe49",
+    contract: "0x4aBFa811AC38622460ad407B010Bb18E1C74E5B9",
     blockExplorerUrls: "https://ropsten.etherscan.io/tx",
   },
   Avalanche: {
@@ -117,7 +117,7 @@ export const CHAIN_INFO = {
     rpcUrl: "https://api.avax-test.network/ext/bc/C/rpc",
     decimals: 1e18,
     blockExplorerUrls: "https://cchain.explorer.avax-test.network/tx",
-    contract: "0x477EaC016C0fD0a4868a3C1e698b77AEEAFe834D",
+    contract: "0xAcFB2E7d6e6272f192D0D573A9bD1CC9d534dE1c",
   },
   Polygon: {
     nonce: 0x7,
@@ -125,7 +125,7 @@ export const CHAIN_INFO = {
     chainId: 80001,
     decimals: 1e18,
     rpcUrl: "https://matic-testnet-archive-rpc.bwarelabs.com",
-    contract: "0x8A2E131856a7724a780Bd13d36559852F4e76088",
+    contract: "0xa53A92E7c9D55E1c60574c486B31931BF9E3A936",
     blockExplorerUrls: "https://mumbai.polygonscan.com/tx",
   },
   Fantom: {
@@ -134,7 +134,7 @@ export const CHAIN_INFO = {
     rpcUrl: "https://rpc.testnet.fantom.network/",
     decimals: 1e18,
     chainId: 4002,
-    contract: "0x799c5AC3dFd79Ec28F92A6b54369B0AF057e39Bd",
+    contract: "0xbc53f71E12007b93Ed2868E5f6CAE1D2ceB7287C",
     blockExplorerUrls: "https://explorer.testnet.fantom.network/transactions",
   },
   Tron: {
@@ -152,7 +152,7 @@ export const CHAIN_INFO = {
     rpcUrl: "https://alfajores-forno.celo-testnet.org",
     chainId: 44787,
     blockExplorerUrls: "https://alfajores-blockscout.celo-testnet.org/tx",
-    contract: "0x7e244A16A1bd869922B327731Bf38d3fd39f4A1B",
+    contract: "0x2faF5AF2DE77BFf3C821Db493314f076d8ED5b7D",
   },
   Harmony: {
     native: coins[9],
@@ -161,7 +161,7 @@ export const CHAIN_INFO = {
     rpcUrl: "https://api.s0.b.hmny.io",
     chainId: 1666700000,
     blockExplorerUrls: "https://explorer.pops.one/tx",
-    contract: "0xE595D1CD77619d891A338dD09Fd64A57704a5375",
+    contract: "0x22ddFB8954c9D75598385c6ad82cDeb124a78Bb3",
   },
   Ont: {
     native: coins[10],
@@ -170,6 +170,6 @@ export const CHAIN_INFO = {
     rpcUrl: "https://testing-bridge.xp.network/ontio",
     chainId: 5851,
     blockExplorerUrls: "https://explorer.ont.io/testnet/tx",
-    contract: "0x976cd640fB7710f07e9B8E94322a9E942C614aeA",
+    contract: "0xdceB7a6b2d2cC149aA74E049231c94D072eDF3E8",
   },
 };
