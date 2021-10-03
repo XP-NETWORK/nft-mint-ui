@@ -98,7 +98,7 @@ export const CHAIN_INFO = {
     chainId: 97,
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     decimals: 1e18,
-    contract: "0x9578048D744DA9b23Ce242FE997E553B44b4cFea",
+    contract: "0x9E93256Df2a4fE757f8AEB533D3943E56ba8CF94",
     blockExplorerUrls: "https://testnet.bscscan.com/tx",
   },
   Ropsten: {

@@ -12,7 +12,11 @@ import { NFTStorage } from "nft.storage";
 import ESDTMint from "./ElrondESDTView";
 
 import { CHAIN_INFO, TronAccs } from "../config";
-import { ChainFactory, mintWeb3NFT } from "../@utils/helper_functions";
+import {
+  ChainFactory,
+  mintWeb3NFT,
+  Web3Helper,
+} from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import * as Erdjs from "@elrondnetwork/erdjs/out";
 import { postCreateNFT } from "../@utils/createNFT";
@@ -30,6 +34,26 @@ function MinterView() {
   // ==============================================================
 
   const [ledger, setLedger] = useState(Ledgers[0].label);
+
+  const updateTokenId = (ledg) => {
+    Web3Helper()
+      .getTokenId(ledg)
+      .then((e) => {
+        setWeb3MinterTokenID(e);
+      });
+  };
+
+  useEffect(() => {
+    console.log(ledger);
+    if (
+      ledger === "" ||
+      ledger === Ledgers[0].label ||
+      ledger === Ledgers[1].label
+    ) {
+      return;
+    }
+    updateTokenId(ledger);
+  }, [ledger]);
 
   useEffect(() => {
     if (!ChainFactory[ledger]) {
@@ -302,6 +326,7 @@ function MinterView() {
           },
         ],
       });
+
       console.log(metadata);
       const result = await mintWeb3NFT(
         ledger,
@@ -310,7 +335,9 @@ function MinterView() {
         metadata.url
       );
       console.log("Metadata Url:", metadata.url, "result", result);
+      updateTokenId(ledger);
       setSuccess("success");
+      // await incrementTokenId();
     } catch (error) {
       console.error(error);
       setSuccess("failure");
@@ -335,6 +362,7 @@ function MinterView() {
         method: "eth_requestAccounts",
       });
       setSelectedAccount(accounts[0]);
+      // setTokenId(await getTokenId());
     })();
     window.ethereum.on("accountsChanged", (a) => {
       setSelectedAccount(a[0]);
@@ -403,7 +431,6 @@ function MinterView() {
       ) : (
         <XPWeb3MintView
           web3MinterTokenID={web3MinterTokenID}
-          setWeb3MinterTokenID={setWeb3MinterTokenID}
           web3MinterAssetName={web3MinterAssetName}
           setWeb3MinterAssetName={setWeb3MinterAssetName}
           web3MinterAssetDescription={web3MinterAssetDescription}

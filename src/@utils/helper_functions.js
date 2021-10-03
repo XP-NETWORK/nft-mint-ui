@@ -9,6 +9,8 @@ import { ethers } from "ethers";
 import TronWeb from "tronweb";
 import { UserSigner } from "@elrondnetwork/erdjs/out";
 import detectEthereumProvider from "@metamask/detect-provider";
+import { Contract } from "testsuite-ts/node_modules/ethers";
+import { abi } from "../assets/data/minterabi.json";
 
 /*const nft_info_encoded_t = new StructType('EncodedNft', [
     new StructFieldDefinition('token', '', new TokenIdentifierType()),
@@ -190,6 +192,12 @@ export const Web3Helper = () => {
       await requireWeb3();
 
       return await web3Provider.listAccounts();
+    },
+    async getTokenId(chain) {
+      await requireWeb3();
+      const contract_address = CHAIN_INFO[chain].contract;
+      const contract = new Contract(contract_address, abi, web3Provider);
+      return await contract.tokenId();
     },
   };
 };

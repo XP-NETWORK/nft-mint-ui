@@ -10,12 +10,8 @@ const XPWeb3MintView = (props) => {
       <div className="group-container">
         <div className="bold-label">Token ID</div>
         <input
+          disabled={true}
           value={props.web3MinterTokenID}
-          onChange={(e) =>
-            props.setWeb3MinterTokenID(
-              e.target.value.replace(/(?:\r\n|\r|\n)/g, "")
-            )
-          }
           placeholder="Token ID"
         />
       </div>

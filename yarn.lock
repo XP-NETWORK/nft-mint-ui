@@ -10000,6 +10000,12 @@ next-tick@~1.0.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
 
+"nft-db-client@git+https://github.com/xp-network/nft-db-client-":
+  version "1.1.0"
+  resolved "git+https://github.com/xp-network/nft-db-client-#35d431d5cfb45c4f745fda529e59060ed2600638"
+  dependencies:
+    axios "^0.21.1"
+
 "nft-db-client@git+https://github.com/xp-network/nft-db-client-#master":
   version "1.0.0"
   resolved "git+https://github.com/xp-network/nft-db-client-#bd55ad230f3c311fa9d033f83dadf1feff71b99b"
