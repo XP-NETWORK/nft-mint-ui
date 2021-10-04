@@ -89,7 +89,7 @@ export const CHAIN_INFO = {
     chainId: 256,
     rpcUrl: "https://http-testnet.hecochain.com",
     decimals: 1e18,
-    contract: "0xC77a75484821f04273D3A6968e63390DC846Dcc5",
+    contract: "0x1247a6cB7aA2c90C6B9eF96AE3E7b269139BE06b",
     blockExplorerUrls: "https://testnet.hecoinfo.com/tx",
   },
   BSC: {
@@ -98,7 +98,7 @@ export const CHAIN_INFO = {
     chainId: 97,
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     decimals: 1e18,
-    contract: "0x9E93256Df2a4fE757f8AEB533D3943E56ba8CF94",
+    contract: "0x12889E870A48Be2A04564e74f66fC91D439Da03e",
     blockExplorerUrls: "https://testnet.bscscan.com/tx",
   },
   Ropsten: {
@@ -107,7 +107,7 @@ export const CHAIN_INFO = {
     chainId: 3,
     rpcUrl: "https://ropsten.infura.io/v3/182b3d3fb2d14d5fbe7421348624d1ce",
     decimals: 1e18,
-    contract: "0x4aBFa811AC38622460ad407B010Bb18E1C74E5B9",
+    contract: "0x2C742F65E6FEcDbb4ceE3D35473e39012aEDf3DD",
     blockExplorerUrls: "https://ropsten.etherscan.io/tx",
   },
   Avalanche: {
@@ -125,7 +125,7 @@ export const CHAIN_INFO = {
     chainId: 80001,
     decimals: 1e18,
     rpcUrl: "https://matic-testnet-archive-rpc.bwarelabs.com",
-    contract: "0xa53A92E7c9D55E1c60574c486B31931BF9E3A936",
+    contract: "0x9E93256Df2a4fE757f8AEB533D3943E56ba8CF94",
     blockExplorerUrls: "https://mumbai.polygonscan.com/tx",
   },
   Fantom: {
@@ -152,7 +152,7 @@ export const CHAIN_INFO = {
     rpcUrl: "https://alfajores-forno.celo-testnet.org",
     chainId: 44787,
     blockExplorerUrls: "https://alfajores-blockscout.celo-testnet.org/tx",
-    contract: "0x2faF5AF2DE77BFf3C821Db493314f076d8ED5b7D",
+    contract: "0xE595D1CD77619d891A338dD09Fd64A57704a5375",
   },
   Harmony: {
     native: coins[9],

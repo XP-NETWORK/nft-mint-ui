@@ -328,12 +328,7 @@ function MinterView() {
       });
 
       console.log(metadata);
-      const result = await mintWeb3NFT(
-        ledger,
-        web3MinterTokenID,
-        selectedAccount,
-        metadata.url
-      );
+      const result = await mintWeb3NFT(ledger, selectedAccount, metadata.url);
       console.log("Metadata Url:", metadata.url, "result", result);
       updateTokenId(ledger);
       setSuccess("success");

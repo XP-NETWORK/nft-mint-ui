@@ -245,14 +245,13 @@ export const ChainFactory = {
  * @param {string} owner - the target owner of the token
  * @param {string} uri - the info linked to the token
  */
-export const mintWeb3NFT = async (chain, token, owner, uri) => {
+export const mintWeb3NFT = async (chain, owner, uri) => {
   const contract = CHAIN_INFO[chain].contract;
   const helper = ChainFactory["Web3"];
   const inner = await helper.inner();
 
   await inner.mintNft(await helper.signerFromPk(owner), {
     contract,
-    token,
     uri,
   });
 };
