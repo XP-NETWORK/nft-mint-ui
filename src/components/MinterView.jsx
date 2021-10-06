@@ -53,7 +53,6 @@ function MinterView() {
   };
 
   useEffect(() => {
-    console.log(ledger);
     if (
       ledger === "" ||
       ledger === Ledgers[0].label ||
@@ -374,7 +373,6 @@ function MinterView() {
         method: "eth_requestAccounts",
       });
       setSelectedAccount(accounts[0]);
-      // setTokenId(await getTokenId());
     })();
     window.ethereum.on("accountsChanged", (a) => {
       setSelectedAccount(a[0]);
@@ -456,7 +454,6 @@ function MinterView() {
           ledger={ledger}
         />
       )}
-
       <footer></footer>
     </div>
   );

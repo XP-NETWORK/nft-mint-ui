@@ -256,9 +256,7 @@ export const ChainFactory = {
 export const mintWeb3NFT = async (chain, owner, uri) => {
   const contract = CHAIN_INFO[chain].contract;
   const helper = ChainFactory[chain === "Tron" ? "Tron" : "Web3"];
-  console.log("Helper", helper);
   const inner = await helper.inner();
-  console.log("Inner", inner);
   console.log(
     await inner.mintNft(await helper.signerFromPk(owner), {
       contract,
