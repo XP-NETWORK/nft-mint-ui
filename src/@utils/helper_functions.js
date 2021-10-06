@@ -208,11 +208,8 @@ export function TronHelper() {
 
   async function requireTron() {
     if (tronWeb === undefined) {
-      tronWebp = new TronWeb({
-        fullHost: CHAIN_INFO["Tron"].rpcUrl,
-        privateKey: CHAIN_INFO["Tron"].contract_owner,
-      });
-      tronWeb = await baseTronHelperFactory(tronWebp);
+      tronWeb = window.tronLink;
+      tronWebp = await baseTronHelperFactory(tronWeb.tronWeb);
     }
   }
 
@@ -221,9 +218,19 @@ export function TronHelper() {
     async inner() {
       await requireTron();
 
-      return tronWeb;
+      return tronWebp;
     },
-    signerFromPk: (pk) => Promise.resolve(pk),
+    async listAccounts() {
+      await requireTron();
+      return await tronWeb.request({ method: "tron_requestAccounts" });
+    },
+    async getTokenId() {
+      await requireTron();
+      const c_address = CHAIN_INFO["Tron"].contract;
+      const contract = await tronWeb.tronWeb.contract().at(c_address);
+      return (await contract.tokenId().call()).toNumber();
+    },
+    signerFromPk: (pk) => tronWeb.tronWeb.setPrivateKey(pk),
   };
 }
 
@@ -234,6 +241,7 @@ export const ChainFactory = {
   "XP.network": PolkadotHelper(),
   Elrond: ElrondHelper(),
   Web3: Web3Helper(),
+  Tron: TronHelper(),
 };
 
 /**
@@ -247,11 +255,14 @@ export const ChainFactory = {
  */
 export const mintWeb3NFT = async (chain, owner, uri) => {
   const contract = CHAIN_INFO[chain].contract;
-  const helper = ChainFactory["Web3"];
+  const helper = ChainFactory[chain === "Tron" ? "Tron" : "Web3"];
+  console.log("Helper", helper);
   const inner = await helper.inner();
-
-  await inner.mintNft(await helper.signerFromPk(owner), {
-    contract,
-    uri,
-  });
+  console.log("Inner", inner);
+  console.log(
+    await inner.mintNft(await helper.signerFromPk(owner), {
+      contract,
+      uri,
+    })
+  );
 };

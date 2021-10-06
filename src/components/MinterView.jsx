@@ -16,6 +16,7 @@ import {
   ChainFactory,
   mintWeb3NFT,
   Web3Helper,
+  TronHelper,
 } from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import * as Erdjs from "@elrondnetwork/erdjs/out";
@@ -36,6 +37,14 @@ function MinterView() {
   const [ledger, setLedger] = useState(Ledgers[0].label);
 
   const updateTokenId = (ledg) => {
+    if (ledg === "Tron") {
+      TronHelper()
+        .getTokenId()
+        .then((e) => {
+          setWeb3MinterTokenID(e);
+        });
+      return;
+    }
     Web3Helper()
       .getTokenId(ledg)
       .then((e) => {
@@ -57,6 +66,14 @@ function MinterView() {
 
   useEffect(() => {
     if (!ChainFactory[ledger]) {
+      if (ledger === "Tron") {
+        TronHelper()
+          .listAccounts()
+          .then((a) => {
+            setSelectedAccount(a);
+          });
+        return;
+      }
       ChainFactory.Web3.setWeb3Chain(ledger).then(() => {
         ChainFactory.Web3.listAccounts().then((a) => {
           console.log(a[0]);
