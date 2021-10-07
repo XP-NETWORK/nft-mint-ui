@@ -3,8 +3,6 @@ import { useWindowSize } from "../@utils/hooks";
 import XPLogo from "../assets/SVG/XPLogo";
 import XPSelect from "./XPSelect";
 import { Ledgers } from "../assets/data/ledgers";
-
-import PlokadotMintNftView from "./PolkadotMintNftView";
 import ElrondMintNftView from "./ElrondMintNftView";
 import XPWeb3MintView from "./Web3MintView";
 
@@ -17,10 +15,21 @@ import {
   mintWeb3NFT,
   Web3Helper,
   TronHelper,
+  ElrondHelper,
 } from "../@utils/helper_functions";
 import * as Elrond from "@elrondnetwork/dapp";
 import * as Erdjs from "@elrondnetwork/erdjs/out";
 import { postCreateNFT } from "../@utils/createNFT";
+import {
+  BigUIntValue,
+  BytesValue,
+  ContractFunction,
+  TokenIdentifierValue,
+  Transaction,
+  TransactionPayload,
+  U64Value,
+} from "@elrondnetwork/erdjs/out";
+import { BigNumber } from "@ethersproject/bignumber";
 
 /**
  *
@@ -37,6 +46,9 @@ function MinterView() {
   const [ledger, setLedger] = useState(Ledgers[0].label);
 
   const updateTokenId = (ledg) => {
+    if (ledg === "Elrond") {
+      return;
+    }
     if (ledg === "Tron") {
       TronHelper()
         .getTokenId()
@@ -53,17 +65,22 @@ function MinterView() {
   };
 
   useEffect(() => {
-    if (
-      ledger === "" ||
-      ledger === Ledgers[0].label ||
-      ledger === Ledgers[1].label
-    ) {
+    if (ledger === "") {
       return;
     }
     updateTokenId(ledger);
   }, [ledger]);
 
   useEffect(() => {
+    if (ledger === "Elrond") {
+      ElrondHelper()
+        .listAccounts()
+        .then((a) => {
+          setSelectedAccount(a);
+          setAddress(a);
+        });
+      return;
+    }
     if (!ChainFactory[ledger]) {
       if (ledger === "Tron") {
         TronHelper()
@@ -82,14 +99,11 @@ function MinterView() {
     }
   }, [ledger]);
 
-  // POLKADOT STATE
-  const [polkaAddress, setPolkaAddress] = useState("");
-
   // Common image blob storage
   const [, setBlob] = useState("");
   const [success, setSuccess] = useState("");
   const [inactive, setInactive] = useState(false);
-  const [url, setUrl] = useState("");
+  const [file, setFile] = useState(null);
 
   // ELROND STATE
   // ESDT token storage
@@ -136,47 +150,37 @@ function MinterView() {
     try {
       switch (ledger) {
         case Ledgers[0].label: {
-          const polka = await ChainFactory["XP.network"].inner();
-          const signer = { sender: polkaAddress };
-          const encoder = new TextEncoder();
-
-          await postCreateNFT(
-            {
-              link: url,
-              name: name,
-              data: `${"XP.network"},${polkaAddress}`,
-            },
-            (hash) => polka.mintNft(signer, encoder.encode(hash))
+          console.log(file);
+          const elrd = await ChainFactory["Elrond"].inner();
+          const endpoint = "https://api.nft.storage";
+          const token =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDI5NjBBNTgxOWYyZDRmMzE0NWE4NjBhMGVCZTdGRTc0NGREOTBkRTciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzMjgyMDczMjA0MywibmFtZSI6IlRlc3RpbmdLZXkifQ.AyWHqtG3vRe_UUx0ht4EOv7sxbVPGD0ZmxQ6UD8BrKA";
+          const storage = new NFTStorage({ endpoint, token });
+          console.log("Create Item CLICK");
+          const metadata = await storage.store({
+            name: name,
+            description: description,
+            image: file,
+            attributes: [
+              {
+                display_type: "date",
+                trait_type: "birthday",
+                value: Math.round(new Date().getTime() / 1000), // Value must be a unix timestamp.
+              },
+            ],
+          });
+          let response = await elrd.mintNft(
+            address,
+            copies,
+            name,
+            royalties,
+            undefined,
+            description,
+            metadata.url
           );
           break;
         }
         case Ledgers[1].label: {
-          const elrd = await ChainFactory["Elrond"].inner();
-
-          let txu = await postCreateNFT(
-            {
-              link: url,
-              name: name,
-              data: `${"Elrond"},${address},${esdt}`,
-            },
-            (hash) =>
-              elrd.unsignedMintNftTxn(new Erdjs.Address(address), {
-                identifier: esdt.toString(),
-                quantity: parseInt(copies),
-                name: name.toString(),
-                royalties: parseInt(royalties),
-                attrs: description.toString(),
-                uris: [hash],
-              })
-          );
-          sendElrdTx({
-            transaction: txu,
-            callbackRoute: "/processelrd",
-          });
-
-          break;
-        }
-        case Ledgers[2].label: {
           const elrd = await ChainFactory["Elrond"].inner();
           const txu = elrd.unsignedIssueESDTNft(esdtName, esdtTicker);
 
@@ -199,11 +203,6 @@ function MinterView() {
         setInactive(false);
       }, 3000);
     }
-  };
-
-  const handlePolkaAccountChange = (e) => {
-    const val = e.target.value;
-    val ? setPolkaAddress(val) : setPolkaAddress("");
   };
 
   // ==================================================
@@ -314,10 +313,6 @@ function MinterView() {
     val ? setEsdtTicker(val.toUpperCase()) : setEsdtTicker("");
   };
 
-  const handleUrlChange = (e) => {
-    setUrl(e.target.value);
-  };
-
   // ==================================================
   //              WEB3 HANDLERS
   // ==================================================
@@ -394,19 +389,6 @@ function MinterView() {
       </header>
       <p>Using account: {selectedAccount} </p>
       {ledger && ledger === Ledgers[0].label ? (
-        <PlokadotMintNftView
-          inactive={inactive}
-          success={success}
-          onChange={handleChangeFiles}
-          onClick={handleClickCreate}
-          handleChangeTitle={handleChangeTitle}
-          plokadoName={name}
-          value={polkaAddress}
-          onAccountChange={handlePolkaAccountChange}
-          url={url}
-          onChangeUrl={handleUrlChange}
-        />
-      ) : ledger && ledger === Ledgers[1].label ? (
         <ElrondMintNftView
           inactive={inactive}
           success={success}
@@ -425,10 +407,10 @@ function MinterView() {
           handleChangeCopies={handleChangeCopies}
           address={address}
           onAccountChange={handleAccountChange}
-          url={url}
-          onChangeUrl={handleUrlChange}
+          file={file}
+          onChangeFile={setFile}
         />
-      ) : ledger && ledger === Ledgers[2].label ? (
+      ) : ledger && ledger === Ledgers[1].label ? (
         <ESDTMint
           esdtName={esdtName}
           onESDTNameChange={onESDTNameChange}
