@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@elrondnetwork/dapp": "^0.0.26",
-    "@elrondnetwork/erdjs": "^6.5.1",
+    "@elrondnetwork/dapp": "^0.0.60",
+    "@elrondnetwork/erdjs": "^8.0.1-alpha.5",
     "@metamask/detect-provider": "^1.2.0",
     "@polkadot/extension-dapp": "^0.39.1",
     "@testing-library/jest-dom": "^5.11.4",

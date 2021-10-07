@@ -4,10 +4,20 @@ import {
   baseWeb3HelperFactory,
   baseTronHelperFactory,
 } from "testsuite-ts";
-import { ChainConfig, ElrondDappConfig, CHAIN_INFO } from "../config";
+import {
+  ChainConfig,
+  ElrondDappConfig,
+  CHAIN_INFO,
+  ElrondKeys,
+} from "../config";
 import { ethers } from "ethers";
 import TronWeb from "tronweb";
-import { UserSigner } from "@elrondnetwork/erdjs/out";
+import {
+  ExtensionProvider,
+  SignableMessage,
+  Transaction,
+  UserSigner,
+} from "@elrondnetwork/erdjs/out";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { Contract } from "testsuite-ts/node_modules/ethers";
 import { abi } from "../assets/data/minterabi.json";
@@ -39,6 +49,17 @@ export async function post(route, data) {
   return [await resp.json(), undefined];
 }
 
+ExtensionProvider.prototype.sign = (isignable) => {
+  if (isignable instanceof Transaction) {
+    return ExtensionProvider.signTransaction(isignable);
+  } else if (isignable instanceof SignableMessage) {
+    return ExtensionProvider.signMessage(isignable);
+  }
+};
+
+ExtensionProvider.prototype.getAddress = () => {
+  return "ExtensionProvider.getInstance().account.address;";
+};
 /**
  * Wrapper over PolkadotPalletHelper
  */
@@ -67,6 +88,72 @@ export function PolkadotHelper() {
 /**
  * Wrapper over ElrondHelper from testsuite-ts
  */
+// export function ElrondHelper() {
+//   let ep = undefined;
+//   let elrd = undefined;
+
+//   async function requireElrd() {
+//     if (elrd === undefined) {
+//       const ep = ExtensionProvider.getInstance();
+//       await ep.init();
+//       await ep.login();
+//       elrd = await elrondHelperFactory(
+//         ChainConfig.elrond_node,
+//         ChainConfig.elrond_minter,
+//         ChainConfig.elrond_esdt,
+//         ChainConfig.elrond_esdt_nft
+//       );
+//     }
+//   }
+
+//   return {
+//     ident: "Elrond",
+//     /**
+//      *
+//      * @returns Inner ElrondHelper from testsuite-ts
+//      */
+//     async inner() {
+//       await requireElrd();
+
+//       return elrd;
+//     },
+//     async listAccounts() {
+//       await requireElrd();
+//       const isNotConnected = !(await ep.isConnected());
+//       if (isNotConnected) {
+//         await ep.login();
+//       }
+//       const account = await elrd.account.address;
+//       return account;
+//     },
+//     async mintElrondNft() {},
+//     async elrondMintableNfts(address) {
+//       let err;
+//       const resp = await fetch(
+//         `${ElrondDappConfig.gatewayAddress}/address/${address}/esdts-with-role/ESDTRoleNFTCreate`
+//       ).catch((e) => (err = e));
+
+//       if (err) {
+//         return [undefined, err];
+//       }
+
+//       const dat = await resp.json();
+
+//       return [dat.data && dat.data.tokens, undefined];
+//     },
+//     /**
+//      * Create elrond user signer from pem
+//      *
+//      * @param {string} pk pem content
+//      * @returns Elrond UserSigner
+//      */
+//     async signerFromPk(pk) {
+//       requireElrd();
+//       return UserSigner.fromPem(pk);
+//     },
+//   };
+// }
+
 export function ElrondHelper() {
   let elrd = undefined;
 
@@ -75,8 +162,10 @@ export function ElrondHelper() {
       elrd = await elrondHelperFactory(
         ChainConfig.elrond_node,
         ChainConfig.elrond_minter,
+        "",
         ChainConfig.elrond_esdt,
-        ChainConfig.elrond_esdt_nft
+        ChainConfig.elrond_esdt_nft,
+        ""
       );
     }
   }
@@ -91,6 +180,31 @@ export function ElrondHelper() {
       await requireElrd();
 
       return elrd;
+    },
+    async listAccounts() {
+      const ep = ExtensionProvider.getInstance();
+      await ep.init();
+      await ep.login();
+      return ep.account.address;
+    },
+    async mintElrondNft(
+      identifier,
+      quantity,
+      name,
+      royalties,
+      hash,
+      attrs,
+      uri
+    ) {
+      elrd.mintNft(ExtensionProvider.getInstance(), {
+        identifier,
+        quantity,
+        name,
+        royalties,
+        hash,
+        attrs,
+        uris: [uri],
+      });
     },
     async elrondMintableNfts(address) {
       let err;

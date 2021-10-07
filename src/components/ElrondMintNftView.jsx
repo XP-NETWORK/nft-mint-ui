@@ -54,6 +54,7 @@ const ElrondMintNftView = (props) => {
         return;
       }
 
+      console.log(props.address);
       const tokens = await ChainFactory["Elrond"].elrondMintableNfts(
         props.address
       );
@@ -79,8 +80,8 @@ const ElrondMintNftView = (props) => {
         <div className="bold-label">ESDT Manager Address</div>
         <input
           value={props.address}
-          onChange={(e) => props.onAccountChange(e)}
-          placeholder=""
+          placeholder="(address from wallet)"
+          disabled={true}
         />
       </div>
 
@@ -139,10 +140,15 @@ const ElrondMintNftView = (props) => {
       </div>
 
       <div className="group-container">
-        <div className="bold-label">URI</div>
+        <div className="bold-label">Asset</div>
         <input
-          value={props.url}
-          onChange={(e) => props.onChangeUrl(e)}
+          type="file"
+          accept="image/*"
+          value={props.file?.filename}
+          onChange={(e) => {
+            const file = e.target.files[0];
+            props.onChangeFile(file);
+          }}
           placeholder=""
         />
       </div>
