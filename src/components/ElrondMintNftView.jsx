@@ -54,10 +54,11 @@ const ElrondMintNftView = (props) => {
         return;
       }
 
-      console.log(props.address);
+      console.log("Address", props.address);
       const tokens = await ChainFactory["Elrond"].elrondMintableNfts(
         props.address
       );
+      console.log(tokens);
       if (tokens[0] === undefined) {
         return;
       }

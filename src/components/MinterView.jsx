@@ -17,19 +17,7 @@ import {
   TronHelper,
   ElrondHelper,
 } from "../@utils/helper_functions";
-import * as Elrond from "@elrondnetwork/dapp";
-import * as Erdjs from "@elrondnetwork/erdjs/out";
-import { postCreateNFT } from "../@utils/createNFT";
-import {
-  BigUIntValue,
-  BytesValue,
-  ContractFunction,
-  TokenIdentifierValue,
-  Transaction,
-  TransactionPayload,
-  U64Value,
-} from "@elrondnetwork/erdjs/out";
-import { BigNumber } from "@ethersproject/bignumber";
+import { Address, ExtensionProvider } from "@elrondnetwork/erdjs/out";
 
 /**
  *
@@ -121,8 +109,6 @@ function MinterView() {
   // The number of rows to display the entire description
   const [descrRows, setDescrRows] = useState(1);
 
-  const sendElrdTx = Elrond.useSendTransaction();
-
   // ELROND ESDT MINTING
   const [esdtName, setEsdtName] = useState("");
   const [esdtTicker, setEsdtTicker] = useState("");
@@ -150,8 +136,7 @@ function MinterView() {
     try {
       switch (ledger) {
         case Ledgers[0].label: {
-          console.log(file);
-          const elrd = await ChainFactory["Elrond"].inner();
+          const elrond = await ChainFactory["Elrond"];
           const endpoint = "https://api.nft.storage";
           const token =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDI5NjBBNTgxOWYyZDRmMzE0NWE4NjBhMGVCZTdGRTc0NGREOTBkRTciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzMjgyMDczMjA0MywibmFtZSI6IlRlc3RpbmdLZXkifQ.AyWHqtG3vRe_UUx0ht4EOv7sxbVPGD0ZmxQ6UD8BrKA";
@@ -169,25 +154,53 @@ function MinterView() {
               },
             ],
           });
-          let response = await elrd.mintNft(
-            address,
+          console.log(metadata);
+          await elrond.mintElrondNft(
+            esdt,
             copies,
             name,
             royalties,
             undefined,
             description,
-            metadata.url
+            metadata.data.image.href
           );
+          setSuccess("success");
           break;
         }
         case Ledgers[1].label: {
           const elrd = await ChainFactory["Elrond"].inner();
-          const txu = elrd.unsignedIssueESDTNft(esdtName, esdtTicker);
+          elrd.signAndSend = async (signer, tx) => {
+            const acc = await elrd.syncAccount(signer);
 
-          sendElrdTx({
-            transaction: txu,
-            callbackRoute: "/processesdt",
-          });
+            tx.setNonce(acc.nonce);
+            const stx = await signer.sign(tx);
+            try {
+              await tx.send(stx);
+            } catch (e) {
+              if (e.message.includes("lowerNonceInTx")) {
+                throw new Error("Error");
+              } else {
+                throw e;
+              }
+            }
+            return tx;
+          };
+          const ticker = await elrd.issueESDTNft(
+            ExtensionProvider.getInstance(),
+            esdtName,
+            esdtTicker,
+            false,
+            false,
+            true
+          );
+
+          await elrd.setESDTRole(
+            ExtensionProvider.getInstance(),
+            ticker,
+            new Address(address),
+            Array.of("ESDTRoleNFTCreate")
+          );
+          setSuccess("success");
           break;
         }
         default:
