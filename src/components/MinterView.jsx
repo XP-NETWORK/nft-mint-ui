@@ -19,6 +19,26 @@ import {
 } from "../@utils/helper_functions";
 import { Address, ExtensionProvider } from "@elrondnetwork/erdjs/out";
 
+const uploadToIpfs = async (name, description, file) => {
+  const endpoint = "https://api.nft.storage";
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDI5NjBBNTgxOWYyZDRmMzE0NWE4NjBhMGVCZTdGRTc0NGREOTBkRTciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzMjgyMDczMjA0MywibmFtZSI6IlRlc3RpbmdLZXkifQ.AyWHqtG3vRe_UUx0ht4EOv7sxbVPGD0ZmxQ6UD8BrKA";
+  const storage = new NFTStorage({ endpoint, token });
+  console.log("Create Item CLICK");
+  return await storage.store({
+    name: name,
+    description: description,
+    image: file,
+    attributes: [
+      {
+        display_type: "date",
+        trait_type: "birthday",
+        value: Math.round(new Date().getTime() / 1000), // Value must be a unix timestamp.
+      },
+    ],
+  });
+};
+
 /**
  *
  * @returns the JSX of the application
@@ -136,23 +156,7 @@ function MinterView() {
       switch (ledger) {
         case Ledgers[0].label: {
           const elrond = await ChainFactory["Elrond"];
-          const endpoint = "https://api.nft.storage";
-          const token =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDI5NjBBNTgxOWYyZDRmMzE0NWE4NjBhMGVCZTdGRTc0NGREOTBkRTciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzMjgyMDczMjA0MywibmFtZSI6IlRlc3RpbmdLZXkifQ.AyWHqtG3vRe_UUx0ht4EOv7sxbVPGD0ZmxQ6UD8BrKA";
-          const storage = new NFTStorage({ endpoint, token });
-          console.log("Create Item CLICK");
-          const metadata = await storage.store({
-            name: name,
-            description: description,
-            image: file,
-            attributes: [
-              {
-                display_type: "date",
-                trait_type: "birthday",
-                value: Math.round(new Date().getTime() / 1000), // Value must be a unix timestamp.
-              },
-            ],
-          });
+          const metadata = await uploadToIpfs(name, description, file);
           await elrond.mintElrondNft(
             esdt,
             copies,
@@ -162,27 +166,12 @@ function MinterView() {
             description,
             metadata.url
           );
+          console.log("RESULT - SUCCESS ");
           setSuccess("success");
           break;
         }
         case Ledgers[1].label: {
           const elrd = await ChainFactory["Elrond"].inner();
-          elrd.signAndSend = async (signer, tx) => {
-            const acc = await elrd.syncAccount(signer);
-
-            tx.setNonce(acc.nonce);
-            const stx = await signer.sign(tx);
-            try {
-              await tx.send(stx);
-            } catch (e) {
-              if (e.message.includes("lowerNonceInTx")) {
-                throw new Error("Error");
-              } else {
-                throw e;
-              }
-            }
-            return tx;
-          };
           const ticker = await elrd.issueESDTNft(
             ExtensionProvider.getInstance(),
             esdtName,
@@ -198,6 +187,7 @@ function MinterView() {
             new Address(address),
             Array.of("ESDTRoleNFTCreate")
           );
+          console.log("RESULT - SUCCESS");
           setSuccess("success");
           break;
         }
@@ -330,23 +320,12 @@ function MinterView() {
   const handleWeb3Click = async () => {
     setInactive(true);
     try {
-      const endpoint = "https://api.nft.storage";
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDI5NjBBNTgxOWYyZDRmMzE0NWE4NjBhMGVCZTdGRTc0NGREOTBkRTciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzMjgyMDczMjA0MywibmFtZSI6IlRlc3RpbmdLZXkifQ.AyWHqtG3vRe_UUx0ht4EOv7sxbVPGD0ZmxQ6UD8BrKA";
-      const storage = new NFTStorage({ endpoint, token });
       console.log("Create Item CLICK");
-      const metadata = await storage.store({
-        name: web3MinterAssetName,
-        description: web3MinterAssetDescription,
-        image: web3MinterAssetBlob,
-        attributes: [
-          {
-            display_type: "date",
-            trait_type: "birthday",
-            value: Math.round(new Date().getTime() / 1000), // Value must be a unix timestamp.
-          },
-        ],
-      });
+      const metadata = await uploadToIpfs(
+        web3MinterAssetName,
+        setWeb3MinterAssetDescription,
+        web3MinterAssetBlob
+      );
       const result = await mintWeb3NFT(ledger, selectedAccount, metadata.url);
       console.log("Metadata Url:", metadata.url, "result", result);
       updateTokenId(ledger);

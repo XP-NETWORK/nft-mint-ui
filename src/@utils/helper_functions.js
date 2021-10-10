@@ -131,7 +131,7 @@ export function ElrondHelper() {
         name,
         uris: [uri],
       };
-      elrd.mintNft(ExtensionProvider.getInstance(), args);
+      await elrd.mintNft(ExtensionProvider.getInstance(), args);
     },
     async elrondMintableNfts(address) {
       let err;
