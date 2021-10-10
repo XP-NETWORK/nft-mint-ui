@@ -34,7 +34,7 @@ function MinterView() {
   const [ledger, setLedger] = useState(Ledgers[0].label);
 
   const updateTokenId = (ledg) => {
-    if (ledg === "Elrond") {
+    if (ledg === "Elrond" || ledg === "ESDT") {
       return;
     }
     if (ledg === "Tron") {
@@ -53,14 +53,14 @@ function MinterView() {
   };
 
   useEffect(() => {
-    if (ledger === "") {
+    if (ledger === "" || ledger === Ledgers[1].label) {
       return;
     }
     updateTokenId(ledger);
   }, [ledger]);
 
   useEffect(() => {
-    if (ledger === "Elrond") {
+    if (ledger === "Elrond" || ledger === "ESDT") {
       ElrondHelper()
         .listAccounts()
         .then((a) => {
@@ -80,7 +80,6 @@ function MinterView() {
       }
       ChainFactory.Web3.setWeb3Chain(ledger).then(() => {
         ChainFactory.Web3.listAccounts().then((a) => {
-          console.log(a[0]);
           setSelectedAccount(a[0]);
         });
       });
@@ -154,7 +153,6 @@ function MinterView() {
               },
             ],
           });
-          console.log(metadata);
           await elrond.mintElrondNft(
             esdt,
             copies,
@@ -162,7 +160,7 @@ function MinterView() {
             royalties,
             undefined,
             description,
-            metadata.data.image.href
+            metadata.url
           );
           setSuccess("success");
           break;
@@ -230,7 +228,6 @@ function MinterView() {
   const handleChangeESDT = (e) => {
     const val = e.value;
     setEsdt(val);
-    console.log(esdt);
   };
 
   /**
@@ -350,8 +347,6 @@ function MinterView() {
           },
         ],
       });
-
-      console.log(metadata);
       const result = await mintWeb3NFT(ledger, selectedAccount, metadata.url);
       console.log("Metadata Url:", metadata.url, "result", result);
       updateTokenId(ledger);
