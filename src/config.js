@@ -119,6 +119,6 @@ export const CHAIN_INFO = {
 		rpcUrl: "https://api.shasta.trongrid.io/",
 		decimals: 1E6,
 		contract_owner: "991EE549C12DA5EC5AF246FB0733A334CB918D3A28D91DC4FEA19BAB7D3FFA8A",
-		contract: "417cc883b5da914678e0ac952d954adaa37156721d"
+		contract: "4179ff0b4e9e3f67806ff17e1d708a9490ef121e29"
     }
 };
