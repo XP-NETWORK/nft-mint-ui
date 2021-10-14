@@ -142,7 +142,7 @@ export const CHAIN_INFO = {
     nonce: 0x9,
     rpcUrl: "https://api.shasta.trongrid.io/",
     decimals: 1e6,
-    contract: "410488096d3c56c571e9841ae6b9988cf623e28cb9",
+    contract: "4179ff0b4e9e3f67806ff17e1d708a9490ef121e29",
     blockExplorerUrls: "https://shasta.tronscan.org/#/transaction",
   },
   Celo: {
